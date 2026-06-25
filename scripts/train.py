@@ -80,6 +80,13 @@ def main() -> None:
     }
     (OUT / "metrics.json").write_text(json.dumps(card, indent=2))
 
+    # mirror artifacts to the static site so the client-side dashboard stays in sync
+    import shutil
+    web = ROOT / "static" / "data"
+    web.mkdir(parents=True, exist_ok=True)
+    for f in ["dc_model.json", "dc_pretournament.json", "elo.json", "fixtures.json", "metrics.json"]:
+        shutil.copy(OUT / f, web / f)
+
     print("\n=== Backtest (RPS — lower is better) ===")
     for name, v in report["windows"].items():
         print(f"  {name}: {v['matches']} matches | "

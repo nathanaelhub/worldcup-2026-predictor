@@ -1,11 +1,18 @@
 # World Cup 2026 Predictor
 
+**[🏆 Live dashboard](https://nathanaelhub.github.io/worldcup-2026-predictor/)**
+
 A quant-style match predictor for the 2026 FIFA World Cup. It outputs **win /
 draw / loss probabilities and a full score distribution** for any fixture, is
 scored with a **proper scoring rule** (Ranked Probability Score), and is
 benchmarked against an Elo model and the naive base rate. The dashboard predicts
 the **upcoming group-stage fixtures** and keeps an honest, **out-of-sample track
 record** against the games already played.
+
+The hosted dashboard is **fully static** — the Dixon-Coles model is just a table
+of coefficients, so prediction runs entirely in your browser (`static/js/model.js`,
+a faithful port of the Python model). A GitHub Action refits on fresh data and
+redeploys **daily**, so the predictions stay current through the tournament.
 
 > **It works today.** The data pipeline, time-weighted Dixon-Coles model, backtest,
 > and dashboard are all live. On the 48 group games played so far it called
@@ -47,7 +54,9 @@ The model beats both baselines on RPS in every window. (Numbers regenerate into
 - **Flask** — dashboard API + vanilla-JS frontend
 - **Data** — [martj42 international results](https://github.com/martj42/international_results)
   (~49k matches, no auth) + penalty-shootout history
-- **Deploy** — Render (`render.yaml`)
+- **Frontend** — vanilla JS; the model runs client-side (`static/js/model.js`)
+- **Deploy** — GitHub Pages (static, auto-refreshed daily via Actions); also runs
+  as a Flask app locally / on Render (`render.yaml`)
 
 ## Run
 
