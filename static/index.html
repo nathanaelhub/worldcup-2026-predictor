@@ -1,75 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>World Cup 2026 Predictor</title>
-  <link rel="stylesheet" href="css/styles.css" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>World Cup 2026 Predictor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div class="glow"></div>
-  <main>
-    <header class="hero">
-      <h1>🏆 World Cup 2026 <span>Predictor</span></h1>
-      <p class="tagline">A time-weighted Dixon-Coles model on 49k internationals —
-        win/draw/loss probabilities and score distributions for every match.</p>
-      <div class="modelcard" id="modelcard"><span class="muted">loading model card…</span></div>
-    </header>
+<div style="min-height:100vh; background:radial-gradient(1200px 600px at 78% -8%, rgba(46,230,166,0.10), transparent 60%), radial-gradient(900px 500px at 8% 4%, rgba(240,185,72,0.06), transparent 55%), #070b15; color:#e9eef8; font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased;">
 
-    <nav class="tabs">
-      <button class="tab active" data-tab="upcoming">⚽ Upcoming fixtures</button>
-      <button class="tab" data-tab="track">🎯 Track record</button>
-      <button class="tab" data-tab="lab">🔬 Match lab</button>
-    </nav>
+  <header style="position:sticky; top:0; z-index:40; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px clamp(16px,4vw,40px); background:rgba(7,11,21,0.72); backdrop-filter:blur(14px); border-bottom:1px solid rgba(255,255,255,0.07);">
+    <div style="display:flex; align-items:center; gap:11px;">
+      <span style="width:9px; height:9px; border-radius:50%; background:#2ee6a6; box-shadow:0 0 14px rgba(46,230,166,0.9);"></span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:13px; letter-spacing:0.14em; color:#e9eef8;">WORLD&nbsp;CUP&nbsp;2026</span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-weight:500; font-size:13px; letter-spacing:0.14em; color:#5f6b85;">PREDICTOR</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span style="font-size:16px; letter-spacing:2px;">🇺🇸&#8202;🇨🇦&#8202;🇲🇽</span>
+      <a href="https://github.com/nathanaelhub/worldcup-2026-predictor" style="text-decoration:none; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; color:#5f6b85; padding:4px 9px; border:1px solid rgba(255,255,255,0.09); border-radius:6px;">GITHUB ↗</a>
+    </div>
+  </header>
 
-    <!-- UPCOMING -->
-    <section id="upcoming" class="panel active">
-      <p class="panel-note">Remaining group-stage fixtures, predicted by the full model
-        (neutral venue). Groups reconstructed from played matches.</p>
-      <div id="upcoming-grid" class="fixtures"></div>
-    </section>
+  <section style="padding:clamp(34px,6vw,68px) clamp(16px,4vw,40px) clamp(20px,3vw,30px); max-width:1180px; margin:0 auto; position:relative; overflow:hidden;">
+    <svg viewBox="0 0 600 300" preserveAspectRatio="xMidYMid slice" style="position:absolute; inset:0; width:100%; height:100%; opacity:0.05; pointer-events:none;">
+      <rect x="2" y="2" width="596" height="296" fill="none" stroke="#2ee6a6" stroke-width="1"></rect>
+      <line x1="300" y1="2" x2="300" y2="298" stroke="#2ee6a6" stroke-width="1"></line>
+      <circle cx="300" cy="150" r="58" fill="none" stroke="#2ee6a6" stroke-width="1"></circle>
+      <circle cx="300" cy="150" r="2.5" fill="#2ee6a6"></circle>
+      <rect x="2" y="92" width="74" height="116" fill="none" stroke="#2ee6a6" stroke-width="1"></rect>
+      <rect x="524" y="92" width="74" height="116" fill="none" stroke="#2ee6a6" stroke-width="1"></rect>
+    </svg>
 
-    <!-- TRACK RECORD -->
-    <section id="track" class="panel">
-      <div class="track-head">
-        <p class="panel-note">Group games scored by the <b>pre-tournament</b> model —
-          a fair, out-of-sample test: the model never saw these results.</p>
-        <div class="acc-badge"><span id="acc-pct">–</span><small>called correctly</small></div>
-      </div>
-      <table class="results">
-        <thead><tr><th>Date</th><th>Grp</th><th>Match</th><th>Model pick</th><th>Actual</th><th></th></tr></thead>
-        <tbody id="track-body"></tbody>
-      </table>
-    </section>
-
-    <!-- MATCH LAB -->
-    <section id="lab" class="panel">
-      <div class="lab-pickers">
-        <select id="home"></select>
-        <span class="vs">vs</span>
-        <select id="away"></select>
-        <label class="neutral"><input type="checkbox" id="neutral" checked /> Neutral</label>
-        <button id="go">Predict</button>
-      </div>
-      <div id="lab-result" class="lab-result hidden">
-        <div class="probs">
-          <div class="prob home"><span class="pct" id="p-home">–</span><span class="lbl" id="lbl-home">Home</span></div>
-          <div class="prob draw"><span class="pct" id="p-draw">–</span><span class="lbl">Draw</span></div>
-          <div class="prob away"><span class="pct" id="p-away">–</span><span class="lbl" id="lbl-away">Away</span></div>
+    <div style="position:relative; display:flex; flex-wrap:wrap; align-items:flex-end; gap:clamp(26px,5vw,64px);">
+      <div style="flex:0 0 auto;">
+        <div style="display:inline-flex; align-items:center; gap:8px; padding:5px 12px; border-radius:999px; background:rgba(46,230,166,0.10); border:1px solid rgba(46,230,166,0.28); margin-bottom:18px;">
+          <span style="width:6px; height:6px; border-radius:50%; background:#2ee6a6;"></span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.13em; color:#7df0c9;">OUT-OF-SAMPLE BACKTEST · NOT TRAINING FIT</span>
         </div>
-        <h3>Most likely scorelines</h3>
-        <ul id="top-scores"></ul>
-        <p class="meta" id="lab-meta"></p>
+        <div style="display:flex; align-items:baseline; gap:14px;">
+          <span id="hero-acc" style="font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:clamp(76px,15vw,124px); line-height:0.84; letter-spacing:-0.04em; color:#2ee6a6; text-shadow:0 0 50px rgba(46,230,166,0.25);">··<span style="font-size:0.46em; color:#7df0c9;">%</span></span>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; letter-spacing:0.04em; color:#9aa6be; margin-top:14px; max-width:280px;">Out-of-sample accuracy called on 2026 group-stage games — predicted by a model frozen before kickoff.</div>
       </div>
-    </section>
 
-    <footer>
-      <p>Model: time-weighted Dixon-Coles bivariate Poisson · Data:
-        <a href="https://github.com/martj42/international_results">martj42/international_results</a>
-        · Honest backtest in <code>models/metrics.json</code>. Not modeled: injuries, red cards, squad changes.</p>
-    </footer>
+      <div style="flex:1 1 360px; min-width:300px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.2em; color:#5f6b85; margin-bottom:12px;">QUANT FORECAST MODEL</div>
+        <h1 style="margin:0 0 16px; font-size:clamp(27px,4vw,40px); line-height:1.06; font-weight:700; letter-spacing:-0.02em; color:#f3f6fc; text-wrap:balance;">Probabilities &amp; scorelines for <span style="color:#2ee6a6;">every</span> World&nbsp;Cup match.</h1>
+        <p style="margin:0; font-size:15.5px; line-height:1.6; color:#aeb8cf; max-width:520px; text-wrap:pretty;">A time-weighted <span style="color:#e9eef8; font-weight:600;">Dixon-Coles bivariate-Poisson</span> model fit on <span style="font-family:'IBM Plex Mono',monospace; color:#e9eef8;">49,453</span> international results from 1872 to 2026 — win/draw/loss odds, exact-score distributions and expected goals for any fixture. The model runs entirely in your browser.</p>
+      </div>
+    </div>
+
+    <div id="chips" style="position:relative; display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin-top:clamp(28px,4vw,42px);"></div>
+  </section>
+
+  <nav style="position:sticky; top:53px; z-index:30; max-width:1180px; margin:8px auto 0; padding:0 clamp(16px,4vw,40px); background:rgba(7,11,21,0.72); backdrop-filter:blur(14px);">
+    <div style="position:relative; display:flex; gap:4px; border-bottom:1px solid rgba(255,255,255,0.08);">
+      <button type="button" class="wc-tab" data-tab="fixtures">Upcoming fixtures</button>
+      <button type="button" class="wc-tab" data-tab="record">Track record</button>
+      <button type="button" class="wc-tab" data-tab="lab">Match lab</button>
+      <span id="tab-ind" style="position:absolute; bottom:-1px; left:0; width:33.333%; height:2.5px; background:#2ee6a6; border-radius:2px; box-shadow:0 0 12px rgba(46,230,166,0.7); transform:translateX(0); transition:transform 0.38s cubic-bezier(0.65,0,0.35,1);"></span>
+    </div>
+  </nav>
+
+  <main style="max-width:1180px; margin:0 auto; padding:clamp(22px,3.5vw,34px) clamp(16px,4vw,40px) 30px;">
+    <div id="panel-fixtures" class="wc-panel"></div>
+    <div id="panel-record" class="wc-panel" hidden></div>
+    <div id="panel-lab" class="wc-panel" hidden></div>
   </main>
-  <script src="js/model.js"></script>
-  <script src="js/app.js"></script>
+
+  <footer style="max-width:1180px; margin:0 auto; padding:26px clamp(16px,4vw,40px) 48px; border-top:1px solid rgba(255,255,255,0.07);">
+    <div style="display:flex; flex-wrap:wrap; gap:18px 40px; justify-content:space-between;">
+      <div style="max-width:560px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#7df0c9; margin-bottom:9px;">MODEL &amp; DATA</div>
+        <p style="margin:0; font-size:12.5px; line-height:1.65; color:#7e89a3;">Forecasts come from a <span style="color:#aeb8cf;">time-weighted Dixon-Coles bivariate-Poisson</span> model. Data: <a href="https://github.com/martj42/international_results" style="color:#aeb8cf;">martj42/international_results</a> (1872–2026). Injuries, red cards, and squad changes are <span style="color:#aeb8cf;">not modeled</span>; group letters are reconstructed from played fixtures.</p>
+      </div>
+      <div id="footer-stats" style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#5f6b85; line-height:1.9;"></div>
+    </div>
+  </footer>
+</div>
+
+<script src="js/model.js"></script>
+<script src="js/flags.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>

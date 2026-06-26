@@ -90,7 +90,7 @@ function predict(model, knownSet, elo, home, away, neutral) {
     source = "elo-fallback";
   }
   const favorite = fc.p_home >= fc.p_away ? home : away;
-  return { home, away, ...fc, favorite, source };
+  return { home, away, ...fc, most_likely_score: fc.top_scores[0][0], favorite, source };
 }
 
 function predOutcome(p) {

@@ -22,3 +22,6 @@ models/*.joblib
 .DS_Store
 .vscode/
 .idea/
+
+# Node (test tooling only)
+node_modules/
