@@ -1,12 +1,12 @@
 {
   "data": {
-    "matches": 49465,
+    "matches": 49477,
     "window": "1872\u20132026",
     "source": "martj42/international_results"
   },
   "model": "Time-weighted Dixon-Coles bivariate Poisson",
   "fitted_teams": 262,
-  "home_adv": 0.227,
+  "home_adv": 0.226,
   "rho": -0.039,
   "backtest": {
     "naive_base_rate": {
@@ -23,19 +23,19 @@
         "outcome_accuracy": 0.531
       },
       "World Cup 2026 (group stage so far)": {
-        "matches": 60,
-        "rps_model": 0.1574,
-        "rps_elo": 0.1755,
-        "rps_naive": 0.2157,
-        "outcome_accuracy": 0.65
+        "matches": 72,
+        "rps_model": 0.1488,
+        "rps_elo": 0.1678,
+        "rps_naive": 0.2219,
+        "outcome_accuracy": 0.639
       }
     },
     "pooled": {
-      "matches": 124,
-      "rps_model": 0.1867,
-      "rps_elo": 0.1962,
-      "rps_naive": 0.226,
-      "outcome_accuracy": 0.589
+      "matches": 136,
+      "rps_model": 0.1795,
+      "rps_elo": 0.1903,
+      "rps_naive": 0.2284,
+      "outcome_accuracy": 0.588
     }
   }
 }

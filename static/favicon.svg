@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" rx="7" fill="#070b15"/>
+  <!-- score-probability matrix: teal heatmap peaking at the centre -->
+  <g>
+    <rect x="6.5"  y="6.5"  width="5.5" height="5.5" rx="1.4" fill="#2ee6a6" opacity="0.28"/>
+    <rect x="13.25" y="6.5" width="5.5" height="5.5" rx="1.4" fill="#2ee6a6" opacity="0.58"/>
+    <rect x="20"   y="6.5"  width="5.5" height="5.5" rx="1.4" fill="#2ee6a6" opacity="0.30"/>
+    <rect x="6.5"  y="13.25" width="5.5" height="5.5" rx="1.4" fill="#2ee6a6" opacity="0.58"/>
+    <rect x="13.25" y="13.25" width="5.5" height="5.5" rx="1.4" fill="#2ee6a6" opacity="1"/>
+    <rect x="20"   y="13.25" width="5.5" height="5.5" rx="1.4" fill="#2ee6a6" opacity="0.55"/>
+    <rect x="6.5"  y="20"   width="5.5" height="5.5" rx="1.4" fill="#2ee6a6" opacity="0.30"/>
+    <rect x="13.25" y="20"  width="5.5" height="5.5" rx="1.4" fill="#f0b948" opacity="0.75"/>
+    <rect x="20"   y="20"   width="5.5" height="5.5" rx="1.4" fill="#2ee6a6" opacity="0.26"/>
+  </g>
+</svg>

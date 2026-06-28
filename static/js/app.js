@@ -72,8 +72,8 @@ function fixtureCard(d) {
   return `
   <div style="position:relative; padding:18px 18px 16px; border-radius:16px; background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.012)); border:1px solid rgba(255,255,255,0.08);">
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-      <span style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em; color:#9aa6be; padding:3px 8px; border:1px solid rgba(255,255,255,0.1); border-radius:6px;">GROUP ${d.group}</span>
-      <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; color:#5f6b85;">MATCHDAY 3</span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em; color:#9aa6be; padding:3px 8px; border:1px solid rgba(255,255,255,0.1); border-radius:6px;">${d.groupLabel}</span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; color:#5f6b85;">${d.stageLabel}</span>
     </div>
     <div style="display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:8px; margin-bottom:16px;">
       <div style="min-width:0;">
@@ -102,13 +102,30 @@ function fixtureCard(d) {
   </div>`;
 }
 function renderFixtures() {
-  const rows = D.fixtures.upcoming
-    .map((fx) => ({ ...window.WCModel.predict(D.dc, D.known, D.elo, fx.home, fx.away, true), group: fx.group }))
-    .sort((a, b) => a.group.localeCompare(b.group));
+  const up = D.fixtures.upcoming || [];
+  let rows, heading, sub;
+  if (up.length) {
+    rows = up
+      .map((fx) => ({ ...window.WCModel.predict(D.dc, D.known, D.elo, fx.home, fx.away, true),
+                      groupLabel: `GROUP ${fx.group}`, stageLabel: "MATCHDAY 3", _k: fx.group }))
+      .sort((a, b) => a._k.localeCompare(b._k));
+    heading = "Remaining group-stage fixtures";
+    sub = `${rows.length} matches · most-likely scoreline & outcome odds`;
+  } else {
+    // group stage finished → the next real matches are the Round of 32
+    const seeds = (D.fixtures.bracket && D.fixtures.bracket.seeds) || [];
+    rows = [];
+    for (let i = 0; i < seeds.length; i += 2) {
+      rows.push({ ...window.WCModel.predict(D.dc, D.known, D.elo, seeds[i], seeds[i + 1], true),
+                  groupLabel: "ROUND OF 32", stageLabel: "KNOCKOUT" });
+    }
+    heading = "Round of 32 — next up";
+    sub = `${rows.length} ties · 90-minute outcome odds · see the full path in Bracket`;
+  }
   $("panel-fixtures").innerHTML = `
     <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:18px;">
-      <h2 style="margin:0; font-size:19px; font-weight:700; letter-spacing:-0.01em; color:#f3f6fc;">Remaining group-stage fixtures</h2>
-      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#6e7892;">${rows.length} matches · most-likely scoreline &amp; outcome odds</span>
+      <h2 style="margin:0; font-size:19px; font-weight:700; letter-spacing:-0.01em; color:#f3f6fc;">${heading}</h2>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#6e7892;">${sub}</span>
     </div>
     <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(326px,1fr)); gap:14px;">
       ${rows.map(fixtureCard).join("")}
