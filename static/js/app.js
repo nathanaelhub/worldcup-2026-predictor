@@ -382,16 +382,22 @@ function renderBracket() {
 function setupTabs() {
   const tabs = ["fixtures", "bracket", "record", "lab"];
   const btns = document.querySelectorAll(".wc-tab");
-  btns.forEach((b) => b.addEventListener("click", () => {
-    const t = b.dataset.tab, idx = tabs.indexOf(t);
-    btns.forEach((x) => x.classList.toggle("active", x === b));
-    tabs.forEach((name) => { const el = $(`panel-${name}`); el.hidden = name !== t; });
+  const activate = (t) => {
+    const idx = tabs.indexOf(t);
+    if (idx < 0) return;
+    btns.forEach((x) => x.classList.toggle("active", x.dataset.tab === t));
+    tabs.forEach((name) => { $(`panel-${name}`).hidden = name !== t; });
     $("tab-ind").style.transform = `translateX(${idx * 100}%)`;
     const panel = $(`panel-${t}`);
     panel.style.animation = "none"; void panel.offsetWidth; panel.style.animation = "";
     if (t === "lab") closeDrops();
+  };
+  btns.forEach((b) => b.addEventListener("click", () => {
+    activate(b.dataset.tab);
+    history.replaceState(null, "", `#${b.dataset.tab}`);
   }));
-  btns[0].classList.add("active");
+  // deep-link: open the tab named in the URL hash (e.g. #bracket), else the first
+  activate(tabs.includes(location.hash.slice(1)) ? location.hash.slice(1) : "fixtures");
 }
 
 boot();
