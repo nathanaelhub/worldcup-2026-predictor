@@ -2,6 +2,11 @@
 
 **[🏆 Live dashboard](https://nathanaelhub.github.io/worldcup-2026-predictor/)**
 
+![World Cup 2026 Predictor dashboard](docs/img/dashboard.png)
+
+> The hero accuracy tracks the latest settled games and refits daily, so it may
+> read higher than the fixed group-stage backtest table below.
+
 A quant-style match predictor for the 2026 FIFA World Cup. It outputs **win /
 draw / loss probabilities and a full score distribution** for any fixture, is
 scored with a **proper scoring rule** (Ranked Probability Score), and is
