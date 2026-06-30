@@ -8,17 +8,23 @@ played yet — those are the upcoming matches the dashboard predicts.
 """
 from __future__ import annotations
 
+import json
 from itertools import combinations
+from pathlib import Path
 
 import pandas as pd
 
 WC = "FIFA World Cup"
+KO_PATH = Path(__file__).resolve().parent.parent / "data" / "knockout_r32.json"
+KNOCKOUT_START = "2026-06-28"   # group stage ends 06-27; knockouts are cross-group
 
 
 def _wc_group_matches(matches: pd.DataFrame, season_start="2026-06-01") -> pd.DataFrame:
+    """Group-stage matches only — excluding knockouts, which are cross-group and
+    would otherwise merge groups in the connected-component reconstruction."""
     df = matches.copy()
     df["date"] = pd.to_datetime(df["date"])
-    return df[(df.tournament == WC) & (df.date >= season_start)]
+    return df[(df.tournament == WC) & (df.date >= season_start) & (df.date < KNOCKOUT_START)]
 
 
 def reconstruct_groups(matches: pd.DataFrame) -> dict[str, list[str]]:
@@ -73,3 +79,36 @@ def recent_results(matches: pd.DataFrame, limit: int | None = None) -> list[dict
             "group": groups.get(r.home_team, "?"),
         })
     return rows[:limit] if limit else rows
+
+
+def knockout_r32(matches: pd.DataFrame) -> dict:
+    """Real Round-of-32 draw with results auto-filled from the dataset.
+
+    The pairings come from data/knockout_r32.json (the official draw); a tie is
+    moved from `upcoming` to `played` once the dataset contains that match. Only
+    `upcoming` ties get a model prediction in the app — predictions ahead only.
+    """
+    if not KO_PATH.exists():
+        return {"round": "Round of 32", "upcoming": [], "played": []}
+    spec = json.loads(KO_PATH.read_text())
+
+    df = matches.copy()
+    df["date"] = pd.to_datetime(df["date"])
+    ko = df[(df.tournament == WC) & (df.date >= "2026-06-28")]
+    results = {}
+    for r in ko.itertuples():
+        so = r.shootout_winner if isinstance(r.shootout_winner, str) else None
+        results[frozenset((r.home_team, r.away_team))] = {
+            r.home_team: int(r.home_score), r.away_team: int(r.away_score), "so": so}
+
+    upcoming, played = [], []
+    for home, away in spec["ties"]:
+        res = results.get(frozenset((home, away)))
+        if res:
+            hs, as_ = res[home], res[away]
+            winner = home if hs > as_ else away if as_ > hs else res.get("so")
+            played.append({"home": home, "away": away, "home_score": hs,
+                           "away_score": as_, "winner": winner})
+        else:
+            upcoming.append({"home": home, "away": away})
+    return {"round": spec.get("round", "Round of 32"), "upcoming": upcoming, "played": played}

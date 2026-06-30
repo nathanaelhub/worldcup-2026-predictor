@@ -34,7 +34,6 @@ async function boot() {
   renderChips();
   renderFooter();
   renderFixtures();
-  renderBracket();
   const acc = renderTrack();
   $("hero-acc").innerHTML = `${Math.floor(acc * 100)}<span style="font-size:0.46em; color:#7df0c9;">%</span>`;
   buildLab();
@@ -112,15 +111,15 @@ function renderFixtures() {
     heading = "Remaining group-stage fixtures";
     sub = `${rows.length} matches · most-likely scoreline & outcome odds`;
   } else {
-    // group stage finished → the next real matches are the Round of 32
-    const seeds = (D.fixtures.bracket && D.fixtures.bracket.seeds) || [];
-    rows = [];
-    for (let i = 0; i < seeds.length; i += 2) {
-      rows.push({ ...window.WCModel.predict(D.dc, D.known, D.elo, seeds[i], seeds[i + 1], true),
-                  groupLabel: "ROUND OF 32", stageLabel: "KNOCKOUT" });
-    }
-    heading = "Round of 32 — next up";
-    sub = `${rows.length} ties · 90-minute outcome odds · see the full path in Bracket`;
+    // group stage finished → predict the real, not-yet-played knockout ties
+    const ko = (D.fixtures.knockout && D.fixtures.knockout.upcoming) || [];
+    const round = (D.fixtures.knockout && D.fixtures.knockout.round) || "Knockouts";
+    rows = ko.map((t) => ({ ...window.WCModel.predict(D.dc, D.known, D.elo, t.home, t.away, true),
+                            groupLabel: round.toUpperCase(), stageLabel: "KNOCKOUT" }));
+    heading = `${round} — predictions ahead`;
+    sub = rows.length
+      ? `${rows.length} ties still to play · 90-minute outcome odds`
+      : "No matches scheduled right now — try the Match lab.";
   }
   $("panel-fixtures").innerHTML = `
     <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:18px;">
@@ -320,84 +319,9 @@ function metric(val, label, color, bg, border) {
   </div>`;
 }
 
-// ---------- bracket ----------
-function playMatch(home, away) {
-  const p = window.WCModel.predict(D.dc, D.known, D.elo, home, away, true);
-  const aAdv = p.p_home + p.p_draw / 2, bAdv = p.p_away + p.p_draw / 2;
-  const aWin = aAdv >= bAdv;
-  const ae = D.elo[home] || 1500, be = D.elo[away] || 1500;
-  return {
-    a: { name: home, adv: aAdv, win: aWin },
-    b: { name: away, adv: bAdv, win: !aWin },
-    winner: aWin ? home : away,
-    winAdv: aWin ? aAdv : bAdv,
-    upset: aWin ? ae < be : be < ae,
-  };
-}
-
-function teamRow(c, top) {
-  return `<div style="display:flex; align-items:center; gap:7px; padding:7px 9px; ${top ? "border-bottom:1px solid rgba(255,255,255,0.06);" : ""} background:${c.win ? "rgba(46,230,166,0.10)" : "transparent"};">
-    <span style="font-size:14px;">${flag(c.name)}</span>
-    <span style="flex:1; font-size:12px; font-weight:${c.win ? 600 : 500}; color:${c.win ? "#e9eef8" : "#7e89a3"}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${c.name}</span>
-    <span style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:${c.win ? "#2ee6a6" : "#5f6b85"};">${Math.round(c.adv * 100)}</span>
-  </div>`;
-}
-const tieCell = (m) => `<div style="position:relative; width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.09); border-radius:9px; overflow:hidden;">
-    ${m.upset ? `<span style="position:absolute; top:5px; right:6px; z-index:2; font-family:'IBM Plex Mono',monospace; font-size:7px; letter-spacing:0.05em; color:#0a0f1a; background:#f0b948; padding:1px 4px; border-radius:3px; font-weight:700;">UPSET</span>` : ""}
-    ${teamRow(m.a, true)}${teamRow(m.b, false)}
-  </div>`;
-const bracketCol = (ties) => `<div style="flex:0 0 158px; display:flex; flex-direction:column;">${ties
-    .map((m) => `<div style="flex:1; display:flex; align-items:center;">${tieCell(m)}</div>`).join("")}</div>`;
-const SPACER = `<div style="flex:0 0 28px;"></div>`;
-const colLabel = (t) => `<div style="flex:0 0 158px;">${t}</div>`;
-
-function renderBracket() {
-  const b = D.fixtures.bracket;
-  if (!b || !b.seeds) { $("panel-bracket").innerHTML = `<p class="muted">Bracket unavailable.</p>`; return; }
-  const seeds = b.seeds;
-  const r32 = [];
-  for (let i = 0; i < 32; i += 2) r32.push(playMatch(seeds[i], seeds[i + 1]));
-  const next = (prev) => { const o = []; for (let i = 0; i < prev.length; i += 2) o.push(playMatch(prev[i].winner, prev[i + 1].winner)); return o; };
-  const r16 = next(r32), qf = next(r16), sf = next(qf), fin = next(sf);
-  const champ = fin[0].winner, champAdv = fin[0].winAdv;
-
-  const note = b.projected
-    ? `<div style="padding:11px 14px; border-radius:10px; background:rgba(240,185,72,0.08); border:1px solid rgba(240,185,72,0.22); color:#d9c08a; font-size:12.5px; line-height:1.5; margin-bottom:16px;">
-         Group stage in progress (${b.groups_complete}/12 groups final) — the 32-team field is <b>projected</b> from current standings plus the model's predicted remaining group games, power-seeded by rating. It firms up daily as groups finish.
-       </div>` : "";
-
-  $("panel-bracket").innerHTML = `
-    <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:6px;">
-      <h2 style="margin:0; font-size:19px; font-weight:700; letter-spacing:-0.01em; color:#f3f6fc;">Predicted path to the final</h2>
-      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#6e7892;">model favourite advances each tie · neutral venue</span>
-    </div>
-    <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:16px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:#6e7892;">
-      <span style="display:inline-flex; align-items:center; gap:6px;"><span style="width:10px; height:10px; border-radius:3px; background:rgba(46,230,166,0.6);"></span>ADVANCES (WIN + ½ DRAW)</span>
-      <span style="display:inline-flex; align-items:center; gap:6px;"><span style="font-size:8px; color:#0a0f1a; background:#f0b948; padding:1px 4px; border-radius:3px; font-weight:700;">UPSET</span>LOWER-RATED SIDE WINS</span>
-    </div>
-    ${note}
-    <div style="overflow-x:auto; padding-bottom:10px;">
-      <div style="min-width:1090px;">
-        <div style="display:flex; margin-bottom:12px; font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:0.12em; color:#5f6b85; text-align:center;">
-          ${colLabel("ROUND OF 32")}${SPACER}${colLabel("ROUND OF 16")}${SPACER}${colLabel("QUARTER-FINALS")}${SPACER}${colLabel("SEMI-FINALS")}${SPACER}${colLabel("FINAL")}<div style="flex:0 0 30px;"></div><div style="flex:0 0 150px; color:#f0b948;">CHAMPION</div>
-        </div>
-        <div style="display:flex; height:clamp(820px,116vh,1000px);">
-          ${bracketCol(r32)}${SPACER}${bracketCol(r16)}${SPACER}${bracketCol(qf)}${SPACER}${bracketCol(sf)}${SPACER}${bracketCol(fin)}<div style="flex:0 0 30px;"></div>
-          <div style="flex:0 0 150px; display:flex; align-items:center;">
-            <div style="width:100%; padding:16px 12px; text-align:center; border-radius:12px; background:linear-gradient(180deg, rgba(240,185,72,0.16), rgba(240,185,72,0.03)); border:1px solid rgba(240,185,72,0.35);">
-              <div style="font-size:30px;">${flag(champ)}</div>
-              <div style="font-size:14px; font-weight:700; color:#f3f6fc; margin-top:6px;">${champ}</div>
-              <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#f0b948; margin-top:4px;">${Math.round(champAdv * 100)}% TO WIN THE FINAL</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>`;
-}
-
 // ---------- tabs ----------
 function setupTabs() {
-  const tabs = ["fixtures", "bracket", "record", "lab"];
+  const tabs = ["fixtures", "record", "lab"];
   const btns = document.querySelectorAll(".wc-tab");
   const activate = (t) => {
     const idx = tabs.indexOf(t);

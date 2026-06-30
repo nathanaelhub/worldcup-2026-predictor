@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-06-27",
+  "as_of": "2026-06-28",
   "groups": {
     "A": [
       "Algeria",
@@ -725,236 +725,78 @@
       "group": "J"
     }
   ],
-  "bracket": {
-    "seeds": [
-      "Argentina",
-      "Ghana",
-      "Norway",
-      "Croatia",
-      "Portugal",
-      "Canada",
-      "Morocco",
-      "United States",
-      "Brazil",
-      "Cape Verde",
-      "Mexico",
-      "Senegal",
-      "England",
-      "DR Congo",
-      "Switzerland",
-      "Australia",
-      "Spain",
-      "South Africa",
-      "Belgium",
-      "Austria",
-      "Netherlands",
-      "Egypt",
-      "Germany",
-      "Ivory Coast",
-      "France",
-      "Bosnia and Herzegovina",
-      "Ecuador",
-      "Algeria",
-      "Colombia",
-      "Sweden",
-      "Japan",
-      "Paraguay"
-    ],
-    "qualifiers": [
+  "knockout": {
+    "round": "Round of 32",
+    "upcoming": [
       {
-        "name": "Argentina",
-        "group": "A",
-        "pos": "1st",
-        "seed": 1
+        "home": "Germany",
+        "away": "Paraguay"
       },
       {
-        "name": "Spain",
-        "group": "F",
-        "pos": "1st",
-        "seed": 2
+        "home": "Brazil",
+        "away": "Japan"
       },
       {
-        "name": "France",
-        "group": "K",
-        "pos": "1st",
-        "seed": 3
+        "home": "Netherlands",
+        "away": "Morocco"
       },
       {
-        "name": "Brazil",
-        "group": "E",
-        "pos": "1st",
-        "seed": 4
+        "home": "Portugal",
+        "away": "Croatia"
       },
       {
-        "name": "England",
-        "group": "H",
-        "pos": "1st",
-        "seed": 5
+        "home": "Spain",
+        "away": "Austria"
       },
       {
-        "name": "Colombia",
-        "group": "G",
-        "pos": "1st",
-        "seed": 6
+        "home": "Belgium",
+        "away": "Senegal"
       },
       {
-        "name": "Netherlands",
-        "group": "L",
-        "pos": "1st",
-        "seed": 7
+        "home": "Ivory Coast",
+        "away": "Norway"
       },
       {
-        "name": "Portugal",
-        "group": "G",
-        "pos": "2nd",
-        "seed": 8
+        "home": "France",
+        "away": "Sweden"
       },
       {
-        "name": "Morocco",
-        "group": "E",
-        "pos": "2nd",
-        "seed": 9
+        "home": "Mexico",
+        "away": "Ecuador"
       },
       {
-        "name": "Germany",
-        "group": "I",
-        "pos": "1st",
-        "seed": 10
+        "home": "Switzerland",
+        "away": "Algeria"
       },
       {
-        "name": "Japan",
-        "group": "L",
-        "pos": "2nd",
-        "seed": 11
+        "home": "United States",
+        "away": "Bosnia and Herzegovina"
       },
       {
-        "name": "Switzerland",
-        "group": "D",
-        "pos": "1st",
-        "seed": 12
+        "home": "England",
+        "away": "DR Congo"
       },
       {
-        "name": "Mexico",
-        "group": "J",
-        "pos": "1st",
-        "seed": 13
+        "home": "Colombia",
+        "away": "Ghana"
       },
       {
-        "name": "Ecuador",
-        "group": "I",
-        "pos": "3rd",
-        "seed": 14
+        "home": "Australia",
+        "away": "Egypt"
       },
       {
-        "name": "Belgium",
-        "group": "C",
-        "pos": "1st",
-        "seed": 15
-      },
-      {
-        "name": "Norway",
-        "group": "K",
-        "pos": "2nd",
-        "seed": 16
-      },
-      {
-        "name": "Croatia",
-        "group": "H",
-        "pos": "2nd",
-        "seed": 17
-      },
-      {
-        "name": "Austria",
-        "group": "A",
-        "pos": "2nd",
-        "seed": 18
-      },
-      {
-        "name": "Algeria",
-        "group": "A",
-        "pos": "3rd",
-        "seed": 19
-      },
-      {
-        "name": "Senegal",
-        "group": "K",
-        "pos": "3rd",
-        "seed": 20
-      },
-      {
-        "name": "Australia",
-        "group": "B",
-        "pos": "2nd",
-        "seed": 21
-      },
-      {
-        "name": "Paraguay",
-        "group": "B",
-        "pos": "3rd",
-        "seed": 22
-      },
-      {
-        "name": "Ivory Coast",
-        "group": "I",
-        "pos": "2nd",
-        "seed": 23
-      },
-      {
-        "name": "United States",
-        "group": "B",
-        "pos": "1st",
-        "seed": 24
-      },
-      {
-        "name": "Canada",
-        "group": "D",
-        "pos": "2nd",
-        "seed": 25
-      },
-      {
-        "name": "Egypt",
-        "group": "C",
-        "pos": "2nd",
-        "seed": 26
-      },
-      {
-        "name": "Sweden",
-        "group": "L",
-        "pos": "3rd",
-        "seed": 27
-      },
-      {
-        "name": "DR Congo",
-        "group": "G",
-        "pos": "3rd",
-        "seed": 28
-      },
-      {
-        "name": "Cape Verde",
-        "group": "F",
-        "pos": "2nd",
-        "seed": 29
-      },
-      {
-        "name": "Bosnia and Herzegovina",
-        "group": "D",
-        "pos": "3rd",
-        "seed": 30
-      },
-      {
-        "name": "South Africa",
-        "group": "J",
-        "pos": "2nd",
-        "seed": 31
-      },
-      {
-        "name": "Ghana",
-        "group": "H",
-        "pos": "3rd",
-        "seed": 32
+        "home": "Argentina",
+        "away": "Cape Verde"
       }
     ],
-    "groups_complete": 12,
-    "projected": false
+    "played": [
+      {
+        "home": "South Africa",
+        "away": "Canada",
+        "home_score": 0,
+        "away_score": 1,
+        "winner": "Canada"
+      }
+    ]
   }
 }

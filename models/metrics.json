@@ -1,6 +1,6 @@
 {
   "data": {
-    "matches": 49477,
+    "matches": 49478,
     "window": "1872\u20132026",
     "source": "martj42/international_results"
   },
@@ -23,19 +23,19 @@
         "outcome_accuracy": 0.531
       },
       "World Cup 2026 (group stage so far)": {
-        "matches": 72,
+        "matches": 73,
         "rps_model": 0.1488,
-        "rps_elo": 0.1678,
-        "rps_naive": 0.2219,
-        "outcome_accuracy": 0.639
+        "rps_elo": 0.1669,
+        "rps_naive": 0.2241,
+        "outcome_accuracy": 0.644
       }
     },
     "pooled": {
-      "matches": 136,
-      "rps_model": 0.1795,
-      "rps_elo": 0.1903,
-      "rps_naive": 0.2284,
-      "outcome_accuracy": 0.588
+      "matches": 137,
+      "rps_model": 0.1793,
+      "rps_elo": 0.1897,
+      "rps_naive": 0.2295,
+      "outcome_accuracy": 0.591
     }
   }
 }

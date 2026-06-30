@@ -75,18 +75,18 @@ python scripts/train.py   # fit model, backtest, write models/*.json   (~30s)
 python app.py             # -> http://localhost:8000
 ```
 
-The dashboard has four tabs:
-- **Upcoming fixtures** — the next real matches (remaining group games, or the
-  Round of 32 once the groups finish), predicted by the full model
-- **Bracket** — a predicted path to the final: the model advances the favourite
-  through every knockout tie and crowns a champion, flagging upsets
-
-  ![Bracket](docs/img/bracket.png)
+The dashboard has three tabs:
+- **Upcoming fixtures** — only matches that are still to be played, predicted by
+  the full model. While the groups run it shows the remaining group games; once
+  they finish it shows the real **Round of 32** draw. Pairings come from the
+  official bracket ([Wikipedia](https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage));
+  results auto-fill from the dataset, so played matches drop off and only
+  predictions *ahead* remain.
 - **Track record** — games already played, scored by the *pre-tournament* model
   (a fair out-of-sample test) vs the actual result, with a running hit rate
 - **Match lab** — pick any two nations for a full forecast
 
-Tabs are deep-linkable (`/#bracket`, `/#lab`, …).
+Tabs are deep-linkable (`/#lab`, …).
 
 ## Project structure
 
@@ -97,8 +97,7 @@ worldcup-2026-predictor/
 ├── wc2026/
 │   ├── dixon_coles.py     # time-weighted Dixon-Coles model        [implemented]
 │   ├── ratings.py         # Elo team strength + fallback           [implemented]
-│   ├── fixtures.py        # group reconstruction + upcoming games  [implemented]
-│   ├── bracket.py         # projected qualifiers + seeded bracket  [implemented]
+│   ├── fixtures.py        # group reconstruction, upcoming + R32    [implemented]
 │   ├── backtest.py        # walk-forward RPS vs baselines          [implemented]
 │   ├── features.py        # extra pre-match features               [roadmap]
 │   ├── model.py           # GBM feature blend                      [roadmap]
