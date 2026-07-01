@@ -75,6 +75,9 @@ python scripts/train.py   # fit model, backtest, write models/*.json   (~30s)
 python app.py             # -> http://localhost:8000
 ```
 
+Unit tests for the model core (score matrix, DC correction, markets,
+persistence): `pip install -r requirements-dev.txt && python -m pytest`.
+
 The dashboard has four tabs:
 - **Predicted** — the model's path to the final: it advances the favourite
   through every *unplayed* knockout tie and crowns a predicted champion, using
