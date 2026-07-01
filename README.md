@@ -75,18 +75,20 @@ python scripts/train.py   # fit model, backtest, write models/*.json   (~30s)
 python app.py             # -> http://localhost:8000
 ```
 
-The dashboard has three tabs:
-- **Upcoming fixtures** — only matches that are still to be played, predicted by
-  the full model. While the groups run it shows the remaining group games; once
-  they finish it shows the real **Round of 32** draw. Pairings come from the
-  official bracket ([Wikipedia](https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage));
-  results auto-fill from the dataset, so played matches drop off and only
-  predictions *ahead* remain.
+The dashboard has four tabs:
+- **Predicted** — the model's path to the final: it advances the favourite
+  through every *unplayed* knockout tie and crowns a predicted champion, using
+  the real result wherever a match has already finished.
+- **Live** — the real bracket. Actual results as they land in the dataset;
+  deeper slots stay TBD until both feeders finish. The R32 draw comes from the
+  official bracket ([Wikipedia](https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage))
+  in bracket order, and every later round auto-advances the real winners — so the
+  whole thing stays current with a nightly refit, no manual updates.
 - **Track record** — games already played, scored by the *pre-tournament* model
   (a fair out-of-sample test) vs the actual result, with a running hit rate
 - **Match lab** — pick any two nations for a full forecast
 
-Tabs are deep-linkable (`/#lab`, …).
+Tabs are deep-linkable (`/#live`, `/#lab`, …).
 
 ## Project structure
 

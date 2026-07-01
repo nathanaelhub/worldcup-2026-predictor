@@ -33,7 +33,8 @@ async function boot() {
   renderHero();
   renderChips();
   renderFooter();
-  renderFixtures();
+  renderBracket("predicted", "panel-predicted");
+  renderBracket("live", "panel-live");
   const acc = renderTrack();
   $("hero-acc").innerHTML = `${Math.floor(acc * 100)}<span style="font-size:0.46em; color:#7df0c9;">%</span>`;
   buildLab();
@@ -65,70 +66,89 @@ function renderFooter() {
      <div>DATA THROUGH ${fmtDate(D.fixtures.as_of).toUpperCase()}</div>`;
 }
 
-// ---------- fixtures ----------
-function fixtureCard(d) {
-  const ml = d.most_likely_score.replace("-", " – ");
-  return `
-  <div style="position:relative; padding:18px 18px 16px; border-radius:16px; background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.012)); border:1px solid rgba(255,255,255,0.08);">
-    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
-      <span style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.1em; color:#9aa6be; padding:3px 8px; border:1px solid rgba(255,255,255,0.1); border-radius:6px;">${d.groupLabel}</span>
-      <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.08em; color:#5f6b85;">${d.stageLabel}</span>
-    </div>
-    <div style="display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:8px; margin-bottom:16px;">
-      <div style="min-width:0;">
-        <div style="font-size:25px; line-height:1;">${flag(d.home)}</div>
-        <div style="font-size:13.5px; font-weight:600; color:#e9eef8; margin-top:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${d.home}</div>
-      </div>
-      <div style="text-align:center; padding:0 4px;">
-        <div style="font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:30px; letter-spacing:-0.02em; color:#f3f6fc;">${ml}</div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.1em; color:#5f6b85; margin-top:2px;">EXP. SCORE</div>
-      </div>
-      <div style="min-width:0; text-align:right;">
-        <div style="font-size:25px; line-height:1;">${flag(d.away)}</div>
-        <div style="font-size:13.5px; font-weight:600; color:#e9eef8; margin-top:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${d.away}</div>
-      </div>
-    </div>
-    <div style="display:flex; height:8px; border-radius:5px; overflow:hidden; background:rgba(255,255,255,0.06);">
-      <div style="flex:0 0 ${d.p_home * 100}%; background:#2ee6a6;"></div>
-      <div style="flex:0 0 ${d.p_draw * 100}%; background:#56617c;"></div>
-      <div style="flex:0 0 ${d.p_away * 100}%; background:#f0b948;"></div>
-    </div>
-    <div style="display:flex; justify-content:space-between; margin-top:9px; font-family:'IBM Plex Mono',monospace; font-size:11.5px;">
-      <span style="color:#2ee6a6; font-weight:600;">${pctR(d.p_home)}%<span style="color:#3c6f5e; font-size:9px; margin-left:3px;">WIN</span></span>
-      <span style="color:#8893ac; font-weight:600;">${pctR(d.p_draw)}%<span style="color:#525c74; font-size:9px; margin-left:3px;">DRAW</span></span>
-      <span style="color:#f0b948; font-weight:600;">${pctR(d.p_away)}%<span style="color:#7a6334; font-size:9px; margin-left:3px;">WIN</span></span>
-    </div>
+// ---------- knockout bracket (predicted + live) ----------
+const _pair = (a, b) => [a, b].sort().join("|");
+
+function _predictWinner(home, away) {
+  const p = window.WCModel.predict(D.dc, D.known, D.elo, home, away, true);
+  const aAdv = p.p_home + p.p_draw / 2, bAdv = p.p_away + p.p_draw / 2;
+  return aAdv >= bAdv ? { winner: home, pWin: aAdv } : { winner: away, pWin: bAdv };
+}
+
+function buildBracket(mode) {
+  const src = (D.fixtures.knockout && D.fixtures.knockout.rounds) || [];
+  const real = new Map();
+  src.forEach((r) => r.ties.forEach((t) => { if (t.played) real.set(_pair(t.home, t.away), t); }));
+  const decorate = (home, away) => {
+    if (!home || !away) return { home, away, winner: null, state: "tbd" };
+    const rt = real.get(_pair(home, away));
+    if (rt) return { home: rt.home, away: rt.away, home_score: rt.home_score,
+                     away_score: rt.away_score, winner: rt.winner, state: "played" };
+    if (mode === "live") return { home, away, winner: null, state: "upcoming" };
+    const pr = _predictWinner(home, away);
+    return { home, away, winner: pr.winner, pWin: pr.pWin, state: "predicted" };
+  };
+  const r32 = src.length ? src[0].ties.map((t) => decorate(t.home, t.away)) : [];
+  const rounds = [{ round: "Round of 32", ties: r32 }];
+  let cur = r32;
+  for (const name of ["Round of 16", "Quarter-finals", "Semi-finals", "Final"]) {
+    const next = [];
+    for (let i = 0; i < cur.length; i += 2)
+      next.push(decorate(cur[i] && cur[i].winner, cur[i + 1] && cur[i + 1].winner));
+    rounds.push({ round: name, ties: next });
+    cur = next;
+  }
+  return { rounds, champion: cur[0] ? cur[0].winner : null };
+}
+
+function _koRow(name, isW, extra, top) {
+  return `<div style="display:flex; align-items:center; gap:6px; padding:6px 8px; ${top ? "border-bottom:1px solid rgba(255,255,255,0.06);" : ""} background:${isW ? "rgba(46,230,166,0.12)" : "transparent"};">
+    <span style="font-size:13px;">${name ? flag(name) : ""}</span>
+    <span style="flex:1; font-size:11.5px; font-weight:${isW ? 600 : 500}; color:${!name ? "#4a5570" : isW ? "#e9eef8" : "#8893ac"}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${name || "TBD"}</span>
+    ${extra || ""}
   </div>`;
 }
-function renderFixtures() {
-  const up = D.fixtures.upcoming || [];
-  let rows, heading, sub;
-  if (up.length) {
-    rows = up
-      .map((fx) => ({ ...window.WCModel.predict(D.dc, D.known, D.elo, fx.home, fx.away, true),
-                      groupLabel: `GROUP ${fx.group}`, stageLabel: "MATCHDAY 3", _k: fx.group }))
-      .sort((a, b) => a._k.localeCompare(b._k));
-    heading = "Remaining group-stage fixtures";
-    sub = `${rows.length} matches · most-likely scoreline & outcome odds`;
-  } else {
-    // group stage finished → predict the real, not-yet-played knockout ties
-    const ko = (D.fixtures.knockout && D.fixtures.knockout.upcoming) || [];
-    const round = (D.fixtures.knockout && D.fixtures.knockout.round) || "Knockouts";
-    rows = ko.map((t) => ({ ...window.WCModel.predict(D.dc, D.known, D.elo, t.home, t.away, true),
-                            groupLabel: round.toUpperCase(), stageLabel: "KNOCKOUT" }));
-    heading = `${round} — predictions ahead`;
-    sub = rows.length
-      ? `${rows.length} ties still to play · 90-minute outcome odds`
-      : "No matches scheduled right now — try the Match lab.";
-  }
-  $("panel-fixtures").innerHTML = `
-    <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:18px;">
-      <h2 style="margin:0; font-size:19px; font-weight:700; letter-spacing:-0.01em; color:#f3f6fc;">${heading}</h2>
-      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#6e7892;">${sub}</span>
+function _koTie(t) {
+  const mono = (v, c) => `<span style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:${c};">${v}</span>`;
+  const homeW = t.winner && t.winner === t.home, awayW = t.winner && t.winner === t.away;
+  let eH = "", eA = "";
+  if (t.state === "played") { eH = mono(t.home_score, "#e9eef8"); eA = mono(t.away_score, "#e9eef8"); }
+  else if (t.state === "predicted") { eH = homeW ? mono(Math.round(t.pWin * 100), "#2ee6a6") : ""; eA = awayW ? mono(Math.round(t.pWin * 100), "#2ee6a6") : ""; }
+  const badge = t.state === "played"
+    ? `<span style="position:absolute; top:5px; right:6px; font-family:'IBM Plex Mono',monospace; font-size:7px; color:#0a0f1a; background:#f0b948; padding:1px 4px; border-radius:3px; font-weight:700;">FT</span>` : "";
+  return `<div style="position:relative; width:100%; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.09); border-radius:9px; overflow:hidden;">
+    ${badge}${_koRow(t.home, homeW, eH, true)}${_koRow(t.away, awayW, eA, false)}
+  </div>`;
+}
+const _koCol = (ties) => `<div style="flex:0 0 150px; display:flex; flex-direction:column;">${ties.map((t) => `<div style="flex:1; display:flex; align-items:center;">${_koTie(t)}</div>`).join("")}</div>`;
+
+function renderBracket(mode, mountId) {
+  const { rounds, champion } = buildBracket(mode);
+  const SP = `<div style="flex:0 0 26px;"></div>`;
+  const labels = ["ROUND OF 32", "ROUND OF 16", "QUARTER-FINALS", "SEMI-FINALS", "FINAL"];
+  const cols = rounds.map((r) => _koCol(r.ties)).join(SP);
+  const note = mode === "predicted"
+    ? "Model advances the favourite (win + ½ draw) through every unplayed tie; real results are used wherever a match has finished."
+    : "The real bracket — actual results as they land in the dataset. Slots stay TBD until both feeders finish. Refits daily.";
+  const champCard = champion
+    ? `<div style="flex:0 0 140px; display:flex; align-items:center;"><div style="width:100%; padding:14px 10px; text-align:center; border-radius:12px; background:linear-gradient(180deg, rgba(240,185,72,0.16), rgba(240,185,72,0.03)); border:1px solid rgba(240,185,72,0.35);">
+        <div style="font-size:26px;">${flag(champion)}</div>
+        <div style="font-size:13px; font-weight:700; color:#f3f6fc; margin-top:5px;">${champion}</div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:9px; color:#f0b948; margin-top:3px;">${mode === "predicted" ? "PREDICTED WINNER" : "CHAMPION"}</div>
+      </div></div>`
+    : `<div style="flex:0 0 140px; display:flex; align-items:center; justify-content:center; color:#5f6b85; font-family:'IBM Plex Mono',monospace; font-size:10px;">TBD</div>`;
+  $(mountId).innerHTML = `
+    <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:6px;">
+      <h2 style="margin:0; font-size:19px; font-weight:700; color:#f3f6fc;">${mode === "predicted" ? "Predicted path to the final" : "Live bracket"}</h2>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#6e7892;">${mode === "predicted" ? "model favourite advances · neutral venue" : "official draw · real results"}</span>
     </div>
-    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(326px,1fr)); gap:14px;">
-      ${rows.map(fixtureCard).join("")}
-    </div>`;
+    <p style="color:#7e89a3; font-size:12px; margin:0 0 16px; line-height:1.5;">${note}</p>
+    <div style="overflow-x:auto; padding-bottom:10px;"><div style="min-width:1040px;">
+      <div style="display:flex; margin-bottom:12px; font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:0.1em; color:#5f6b85; text-align:center;">
+        ${labels.map((l) => `<div style="flex:0 0 150px;">${l}</div>`).join(SP)}<div style="flex:0 0 26px;"></div><div style="flex:0 0 140px; color:#f0b948;">${mode === "predicted" ? "PREDICTED" : "CHAMPION"}</div>
+      </div>
+      <div style="display:flex; height:clamp(760px,110vh,940px);">${cols}${SP}${champCard}</div>
+    </div></div>`;
 }
 
 // ---------- track record ----------
@@ -321,7 +341,7 @@ function metric(val, label, color, bg, border) {
 
 // ---------- tabs ----------
 function setupTabs() {
-  const tabs = ["fixtures", "record", "lab"];
+  const tabs = ["predicted", "live", "record", "lab"];
   const btns = document.querySelectorAll(".wc-tab");
   const activate = (t) => {
     const idx = tabs.indexOf(t);

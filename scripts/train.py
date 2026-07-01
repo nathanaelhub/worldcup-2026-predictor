@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 from wc2026.backtest import evaluate_tournaments          # noqa: E402
 from wc2026.dixon_coles import DixonColesModel            # noqa: E402
-from wc2026.fixtures import (knockout_r32, recent_results,  # noqa: E402
+from wc2026.fixtures import (knockout_bracket, recent_results,  # noqa: E402
                              reconstruct_groups, upcoming_fixtures)
 from wc2026.ratings import Elo                            # noqa: E402
 
@@ -58,7 +58,7 @@ def main() -> None:
         "groups": reconstruct_groups(matches),
         "upcoming": upcoming_fixtures(matches),
         "recent": recent_results(matches),
-        "knockout": knockout_r32(matches),
+        "knockout": knockout_bracket(matches),
     }
     (OUT / "fixtures.json").write_text(json.dumps(fixtures, indent=2))
     print(f"Groups: {len(fixtures['groups'])} | upcoming fixtures: {len(fixtures['upcoming'])} "

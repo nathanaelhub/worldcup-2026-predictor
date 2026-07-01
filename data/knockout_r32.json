@@ -1,22 +1,22 @@
 {
-  "note": "Real 2026 World Cup Round-of-32 draw (source: en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage). The 32 qualifiers match what the model derives from the group results; only the pairings come from the official bracket. Results auto-fill from the martj42 dataset as matches are played; refresh this list for later rounds.",
+  "note": "Real 2026 World Cup Round-of-32 draw in bracket order (matches 73-88), source: en.wikipedia.org/wiki/2026_FIFA_World_Cup_knockout_stage. Consecutive ties feed the next round (73/74 -> R16, etc.), verified against the page's R16 pairings (Paraguay v France; Brazil v Ivory Coast/Norway winner). Results auto-fill from the martj42 dataset; refresh only if the draw itself is corrected.",
   "round": "Round of 32",
   "ties": [
     ["Germany", "Paraguay"],
-    ["Brazil", "Japan"],
-    ["South Africa", "Canada"],
+    ["France", "Sweden"],
     ["Netherlands", "Morocco"],
     ["Portugal", "Croatia"],
     ["Spain", "Austria"],
-    ["Belgium", "Senegal"],
-    ["Ivory Coast", "Norway"],
-    ["France", "Sweden"],
-    ["Mexico", "Ecuador"],
-    ["Switzerland", "Algeria"],
     ["United States", "Bosnia and Herzegovina"],
+    ["Belgium", "Senegal"],
+    ["Brazil", "Japan"],
+    ["Ivory Coast", "Norway"],
+    ["Mexico", "Ecuador"],
     ["England", "DR Congo"],
-    ["Colombia", "Ghana"],
+    ["Argentina", "Cape Verde"],
     ["Australia", "Egypt"],
-    ["Argentina", "Cape Verde"]
+    ["Switzerland", "Algeria"],
+    ["Colombia", "Ghana"],
+    ["South Africa", "Canada"]
   ]
 }

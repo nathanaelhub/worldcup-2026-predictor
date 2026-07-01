@@ -81,34 +81,49 @@ def recent_results(matches: pd.DataFrame, limit: int | None = None) -> list[dict
     return rows[:limit] if limit else rows
 
 
-def knockout_r32(matches: pd.DataFrame) -> dict:
-    """Real Round-of-32 draw with results auto-filled from the dataset.
+ROUND_NAMES = ["Round of 32", "Round of 16", "Quarter-finals", "Semi-finals", "Final"]
 
-    The pairings come from data/knockout_r32.json (the official draw); a tie is
-    moved from `upcoming` to `played` once the dataset contains that match. Only
-    `upcoming` ties get a model prediction in the app — predictions ahead only.
+
+def knockout_bracket(matches: pd.DataFrame) -> dict:
+    """The real knockout bracket, cascading actual results from the dataset.
+
+    The R32 draw comes from data/knockout_r32.json (bracket order, matches 73-88);
+    consecutive ties feed the next round. Each round's teams are the *real*
+    winners of the previous round, and a tie's score is filled in once the dataset
+    contains that match — so the whole bracket auto-advances with reality. Slots
+    whose feeders haven't finished stay null (TBD); the app fills those with model
+    predictions on the Predicted tab, and leaves them blank on the Live tab.
     """
+    empty = {"rounds": [{"round": r, "ties": []} for r in ROUND_NAMES]}
     if not KO_PATH.exists():
-        return {"round": "Round of 32", "upcoming": [], "played": []}
+        return empty
     spec = json.loads(KO_PATH.read_text())
 
     df = matches.copy()
     df["date"] = pd.to_datetime(df["date"])
-    ko = df[(df.tournament == WC) & (df.date >= "2026-06-28")]
+    ko = df[(df.tournament == WC) & (df.date >= KNOCKOUT_START)]
     results = {}
     for r in ko.itertuples():
         so = r.shootout_winner if isinstance(r.shootout_winner, str) else None
         results[frozenset((r.home_team, r.away_team))] = {
             r.home_team: int(r.home_score), r.away_team: int(r.away_score), "so": so}
 
-    upcoming, played = [], []
-    for home, away in spec["ties"]:
-        res = results.get(frozenset((home, away)))
+    def make_tie(home, away):
+        res = results.get(frozenset((home, away))) if home and away else None
         if res:
             hs, as_ = res[home], res[away]
             winner = home if hs > as_ else away if as_ > hs else res.get("so")
-            played.append({"home": home, "away": away, "home_score": hs,
-                           "away_score": as_, "winner": winner})
-        else:
-            upcoming.append({"home": home, "away": away})
-    return {"round": spec.get("round", "Round of 32"), "upcoming": upcoming, "played": played}
+            return {"home": home, "away": away, "played": True,
+                    "home_score": hs, "away_score": as_, "winner": winner}
+        return {"home": home, "away": away, "played": False,
+                "home_score": None, "away_score": None, "winner": None}
+
+    r32 = [make_tie(h, a) for h, a in spec["ties"]]
+    rounds = [{"round": "Round of 32", "ties": r32}]
+    prev = r32
+    for name in ROUND_NAMES[1:]:
+        cur = [make_tie(prev[i]["winner"], prev[i + 1]["winner"])
+               for i in range(0, len(prev), 2)]
+        rounds.append({"round": name, "ties": cur})
+        prev = cur
+    return {"rounds": rounds}
