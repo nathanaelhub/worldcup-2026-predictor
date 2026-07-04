@@ -20,9 +20,14 @@ a faithful port of the Python model). A GitHub Action refits on fresh data and
 redeploys **daily**, so the predictions stay current through the tournament.
 
 > **It works today.** The data pipeline, time-weighted Dixon-Coles model, backtest,
-> and dashboard are all live. On the 48 group games played so far it called
-> **62.5% correctly out-of-sample**, beating both baselines on RPS. Full quant
-> roadmap (feature blend, tournament Monte Carlo) in **[`docs/PLAN.md`](docs/PLAN.md)**.
+> tournament Monte Carlo, and dashboard are all live. On the 48 group games played
+> so far it called **62.5% correctly out-of-sample**, beating both baselines on RPS.
+> Remaining quant roadmap (feature blend) in **[`docs/PLAN.md`](docs/PLAN.md)**.
+
+The model also simulates the remaining bracket **20,000 times** on every refit
+(`models/simulation.json`): each nation's chance of reaching every round and
+lifting the trophy, with real results locked in as they happen. Extra time is a
+30-minute Poisson; unresolved ties go to a penalty coin-flip.
 
 ## The model
 
@@ -104,9 +109,9 @@ worldcup-2026-predictor/
 │   ├── ratings.py         # Elo team strength + fallback           [implemented]
 │   ├── fixtures.py        # group reconstruction, upcoming + R32    [implemented]
 │   ├── backtest.py        # walk-forward RPS vs baselines          [implemented]
+│   ├── simulate.py        # tournament Monte Carlo (title odds)    [implemented]
 │   ├── features.py        # extra pre-match features               [roadmap]
-│   ├── model.py           # GBM feature blend                      [roadmap]
-│   └── simulate.py        # tournament Monte Carlo                  [roadmap]
+│   └── model.py           # GBM feature blend                      [roadmap]
 ├── scripts/train.py       # fit + backtest + write models/*.json
 ├── models/                # committed artifacts so the app runs out of the box
 ├── static/                # vanilla-JS dashboard

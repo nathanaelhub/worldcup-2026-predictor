@@ -10,6 +10,7 @@ Outputs (models/):
     elo.json               Elo ratings (team ranking + fallback)
     fixtures.json          reconstructed groups, upcoming fixtures, recent results
     metrics.json           walk-forward backtest + model card
+    simulation.json        Monte Carlo tournament odds from the live bracket
 """
 from __future__ import annotations
 
@@ -26,6 +27,7 @@ from wc2026.dixon_coles import DixonColesModel            # noqa: E402
 from wc2026.fixtures import (knockout_bracket, recent_results,  # noqa: E402
                              reconstruct_groups, upcoming_fixtures)
 from wc2026.ratings import Elo                            # noqa: E402
+from wc2026.simulate import simulate_bracket              # noqa: E402
 
 DATA = ROOT / "data" / "matches.parquet"
 OUT = ROOT / "models"
@@ -64,6 +66,15 @@ def main() -> None:
     print(f"Groups: {len(fixtures['groups'])} | upcoming fixtures: {len(fixtures['upcoming'])} "
           f"| recent played: {len(fixtures['recent'])}")
 
+    # Tournament Monte Carlo from the current bracket state
+    print("Simulating the bracket (20,000 tournaments)…")
+    sim = simulate_bracket(full, fixtures["knockout"], elo=elo.ratings,
+                           n_sims=20_000, seed=2026)
+    (OUT / "simulation.json").write_text(json.dumps(
+        {"as_of": fixtures["as_of"], **sim}, indent=2))
+    fav = max(sim["teams"].items(), key=lambda kv: kv[1]["champion"])
+    print(f"Title favourite: {fav[0]} ({fav[1]['champion']:.1%})")
+
     # Walk-forward backtest on out-of-sample tournaments
     print("Backtesting (each window refits on prior data — a few minutes)…")
     windows = [
@@ -86,7 +97,8 @@ def main() -> None:
     import shutil
     web = ROOT / "static" / "data"
     web.mkdir(parents=True, exist_ok=True)
-    for f in ["dc_model.json", "dc_pretournament.json", "elo.json", "fixtures.json", "metrics.json"]:
+    for f in ["dc_model.json", "dc_pretournament.json", "elo.json", "fixtures.json",
+              "metrics.json", "simulation.json"]:
         shutil.copy(OUT / f, web / f)
 
     print("\n=== Backtest (RPS — lower is better) ===")
