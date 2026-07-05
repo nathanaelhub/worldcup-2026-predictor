@@ -32,6 +32,7 @@ jobs:
       - run: python -m pytest -q           # bad model math should fail the build, not deploy
       - run: python data/ingest.py        # pull latest results -> data/matches.parquet
       - run: python scripts/train.py       # refit + write static/data/*.json
+      - run: python scripts/track_odds.py  # append today's title odds to the history
       - uses: actions/upload-pages-artifact@v3
         with:
           path: static
