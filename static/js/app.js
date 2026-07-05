@@ -25,6 +25,10 @@ async function boot() {
     $("chips").innerHTML = `<div style="color:#9aa6be">Could not load model data.</div>`;
     return;
   }
+  // the simulation artifact arrived later than the rest — degrade gracefully
+  D.sim = await fetch("data/simulation.json")
+    .then((r) => { if (!r.ok) throw 0; return r.json(); })
+    .catch(() => null);
   LAB_TEAMS = Object.entries(D.elo)
     .filter(([n]) => window.WCFlags.hasFlag(n))
     .sort((a, b) => b[1] - a[1])
@@ -35,6 +39,7 @@ async function boot() {
   renderFooter();
   renderBracket("predicted", "panel-predicted");
   renderBracket("live", "panel-live");
+  renderOdds();
   const acc = renderTrack();
   $("hero-acc").innerHTML = `${Math.floor(acc * 100)}<span style="font-size:0.46em; color:#7df0c9;">%</span>`;
   buildLab();
@@ -149,6 +154,54 @@ function renderBracket(mode, mountId) {
       </div>
       <div style="display:flex; height:clamp(760px,110vh,940px);">${cols}${SP}${champCard}</div>
     </div></div>`;
+}
+
+// ---------- title odds (Monte Carlo) ----------
+function renderOdds() {
+  const mount = $("panel-odds");
+  if (!D.sim || !D.sim.teams) {
+    mount.innerHTML = `<div style="color:#9aa6be; font-size:13px;">Simulation data isn't available yet — it ships with the next nightly refit.</div>`;
+    return;
+  }
+  // a team that lost a played tie is out — grey it, don't hide it
+  const out = new Set();
+  ((D.fixtures.knockout && D.fixtures.knockout.rounds) || []).forEach((r) =>
+    r.ties.forEach((t) => { if (t.played && t.winner) out.add(t.home === t.winner ? t.away : t.home); }));
+
+  const rows = Object.entries(D.sim.teams)
+    .map(([team, p]) => ({ team, ...p, out: out.has(team) }))
+    .sort((a, b) => (a.out - b.out) || (b.champion - a.champion) || (b.final - a.final)
+                 || (b.r16 - a.r16) || a.team.localeCompare(b.team));
+  const maxC = Math.max(...rows.map((r) => r.champion), 1e-9);
+  const fmt = (x) => x >= 0.9995 ? "100" : x >= 0.0005 ? (x * 100).toFixed(1) : x > 0 ? "<0.1" : "—";
+  const cols = "minmax(140px,1.2fr) minmax(180px,2fr) 52px 52px 52px 56px";
+  const cell = (v, dim) => `<span style="font-family:'IBM Plex Mono',monospace; font-size:12px; text-align:right; color:${dim ? "#5f6b85" : "#aeb8cf"};">${v}</span>`;
+
+  mount.innerHTML = `
+    <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:6px;">
+      <h2 style="margin:0; font-size:19px; font-weight:700; color:#f3f6fc;">Title odds</h2>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#6e7892;">${D.sim.n_sims.toLocaleString()} simulated tournaments · refit nightly</span>
+    </div>
+    <p style="color:#7e89a3; font-size:12px; margin:0 0 16px; line-height:1.5; max-width:720px;">Monte Carlo of the remaining bracket: every unplayed tie is sampled from the Dixon-Coles score matrix (extra time, then penalties), real results are locked in. Each column is the share of simulations where the nation reaches that round.</p>
+    <div style="overflow-x:auto;"><div style="min-width:660px; border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.08);">
+      <div style="display:grid; grid-template-columns:${cols}; gap:12px; padding:11px 16px; background:rgba(255,255,255,0.035); font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.1em; color:#6e7892;">
+        <span>NATION</span><span>CHAMPION&nbsp;%</span><span style="text-align:right;">FINAL</span><span style="text-align:right;">SEMIS</span><span style="text-align:right;">QTRS</span><span style="text-align:right;">R16</span>
+      </div>
+      ${rows.map((r) => `
+        <div style="display:grid; grid-template-columns:${cols}; gap:12px; align-items:center; padding:11px 16px; border-top:1px solid rgba(255,255,255,0.055); ${r.out ? "opacity:0.45;" : ""}">
+          <span style="font-size:13.5px; color:#e9eef8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${flag(r.team)} ${r.team}
+            ${r.out ? `<span style="font-family:'IBM Plex Mono',monospace; font-size:8px; color:#f0648b; border:1px solid rgba(240,100,139,0.4); border-radius:3px; padding:1px 4px; margin-left:6px; vertical-align:middle;">OUT</span>` : ""}
+          </span>
+          <div style="display:grid; grid-template-columns:1fr 48px; gap:10px; align-items:center;">
+            <div style="height:7px; border-radius:4px; background:rgba(255,255,255,0.06); overflow:hidden;">
+              <div style="height:100%; width:${(r.champion / maxC) * 100}%; background:linear-gradient(90deg,#2ee6a6,#1b9c87); border-radius:4px;"></div>
+            </div>
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; text-align:right; color:${r.out ? "#5f6b85" : "#e9eef8"};">${fmt(r.champion)}</span>
+          </div>
+          ${cell(fmt(r.final), r.out)}${cell(fmt(r.sf), r.out)}${cell(fmt(r.qf), r.out)}${cell(fmt(r.r16), r.out)}
+        </div>`).join("")}
+    </div></div>
+    <p style="font-family:'IBM Plex Mono',monospace; font-size:10px; color:#5f6b85; margin:12px 2px 0;">AS OF ${fmtDate(D.sim.as_of).toUpperCase()} · GREYED NATIONS ARE ELIMINATED</p>`;
 }
 
 // ---------- track record ----------
@@ -341,7 +394,7 @@ function metric(val, label, color, bg, border) {
 
 // ---------- tabs ----------
 function setupTabs() {
-  const tabs = ["predicted", "live", "record", "lab"];
+  const tabs = ["predicted", "live", "odds", "record", "lab"];
   const btns = document.querySelectorAll(".wc-tab");
   const activate = (t) => {
     const idx = tabs.indexOf(t);
@@ -357,8 +410,8 @@ function setupTabs() {
     activate(b.dataset.tab);
     history.replaceState(null, "", `#${b.dataset.tab}`);
   }));
-  // deep-link: open the tab named in the URL hash (e.g. #bracket), else the first
-  activate(tabs.includes(location.hash.slice(1)) ? location.hash.slice(1) : "fixtures");
+  // deep-link: open the tab named in the URL hash (e.g. #odds), else the first
+  activate(tabs.includes(location.hash.slice(1)) ? location.hash.slice(1) : "predicted");
 }
 
 boot();
