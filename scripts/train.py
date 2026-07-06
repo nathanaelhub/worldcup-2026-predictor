@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 from wc2026.backtest import evaluate_tournaments          # noqa: E402
 from wc2026.dixon_coles import DixonColesModel            # noqa: E402
-from wc2026.fixtures import (knockout_bracket, recent_results,  # noqa: E402
+from wc2026.fixtures import (KO_OVERRIDES, knockout_bracket, recent_results,  # noqa: E402
                              reconstruct_groups, upcoming_fixtures)
 from wc2026.ratings import Elo                            # noqa: E402
 from wc2026.simulate import simulate_bracket              # noqa: E402
@@ -66,12 +66,18 @@ def main() -> None:
     print(f"Groups: {len(fixtures['groups'])} | upcoming fixtures: {len(fixtures['upcoming'])} "
           f"| recent played: {len(fixtures['recent'])}")
 
-    # Tournament Monte Carlo from the current bracket state
+    # Tournament Monte Carlo from the current bracket state. Its as_of is the
+    # date of the newest *result* it used — the dataset can lag the manually
+    # confirmed knockout results in data/knockout_overrides.json.
     print("Simulating the bracket (20,000 tournaments)…")
     sim = simulate_bracket(full, fixtures["knockout"], elo=elo.ratings,
                            n_sims=20_000, seed=2026)
+    results_through = fixtures["as_of"]
+    if KO_OVERRIDES.exists():
+        odates = [r["date"] for r in json.loads(KO_OVERRIDES.read_text())["results"] if "date" in r]
+        results_through = max([results_through] + odates)
     (OUT / "simulation.json").write_text(json.dumps(
-        {"as_of": fixtures["as_of"], **sim}, indent=2))
+        {"as_of": results_through, **sim}, indent=2))
     fav = max(sim["teams"].items(), key=lambda kv: kv[1]["champion"])
     print(f"Title favourite: {fav[0]} ({fav[1]['champion']:.1%})")
 

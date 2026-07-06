@@ -733,122 +733,18 @@
           {
             "home": "Germany",
             "away": "Paraguay",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
+            "played": true,
+            "home_score": 1,
+            "away_score": 1,
+            "winner": "Paraguay"
           },
           {
             "home": "France",
             "away": "Sweden",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
-          },
-          {
-            "home": "Netherlands",
-            "away": "Morocco",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
-          },
-          {
-            "home": "Portugal",
-            "away": "Croatia",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
-          },
-          {
-            "home": "Spain",
-            "away": "Austria",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
-          },
-          {
-            "home": "United States",
-            "away": "Bosnia and Herzegovina",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
-          },
-          {
-            "home": "Belgium",
-            "away": "Senegal",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
-          },
-          {
-            "home": "Brazil",
-            "away": "Japan",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
-          },
-          {
-            "home": "Ivory Coast",
-            "away": "Norway",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
-          },
-          {
-            "home": "Mexico",
-            "away": "Ecuador",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
-          },
-          {
-            "home": "England",
-            "away": "DR Congo",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
-          },
-          {
-            "home": "Argentina",
-            "away": "Cape Verde",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
-          },
-          {
-            "home": "Australia",
-            "away": "Egypt",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
-          },
-          {
-            "home": "Switzerland",
-            "away": "Algeria",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
-          },
-          {
-            "home": "Colombia",
-            "away": "Ghana",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
+            "played": true,
+            "home_score": 3,
+            "away_score": 0,
+            "winner": "France"
           },
           {
             "home": "South Africa",
@@ -857,6 +753,110 @@
             "home_score": 0,
             "away_score": 1,
             "winner": "Canada"
+          },
+          {
+            "home": "Netherlands",
+            "away": "Morocco",
+            "played": true,
+            "home_score": 1,
+            "away_score": 1,
+            "winner": "Morocco"
+          },
+          {
+            "home": "Portugal",
+            "away": "Croatia",
+            "played": true,
+            "home_score": 2,
+            "away_score": 1,
+            "winner": "Portugal"
+          },
+          {
+            "home": "Spain",
+            "away": "Austria",
+            "played": true,
+            "home_score": 3,
+            "away_score": 0,
+            "winner": "Spain"
+          },
+          {
+            "home": "United States",
+            "away": "Bosnia and Herzegovina",
+            "played": true,
+            "home_score": 2,
+            "away_score": 0,
+            "winner": "United States"
+          },
+          {
+            "home": "Belgium",
+            "away": "Senegal",
+            "played": true,
+            "home_score": 3,
+            "away_score": 2,
+            "winner": "Belgium"
+          },
+          {
+            "home": "Brazil",
+            "away": "Japan",
+            "played": true,
+            "home_score": 2,
+            "away_score": 1,
+            "winner": "Brazil"
+          },
+          {
+            "home": "Ivory Coast",
+            "away": "Norway",
+            "played": true,
+            "home_score": 1,
+            "away_score": 2,
+            "winner": "Norway"
+          },
+          {
+            "home": "Mexico",
+            "away": "Ecuador",
+            "played": true,
+            "home_score": 2,
+            "away_score": 0,
+            "winner": "Mexico"
+          },
+          {
+            "home": "England",
+            "away": "DR Congo",
+            "played": true,
+            "home_score": 2,
+            "away_score": 1,
+            "winner": "England"
+          },
+          {
+            "home": "Argentina",
+            "away": "Cape Verde",
+            "played": true,
+            "home_score": 3,
+            "away_score": 2,
+            "winner": "Argentina"
+          },
+          {
+            "home": "Australia",
+            "away": "Egypt",
+            "played": true,
+            "home_score": 1,
+            "away_score": 1,
+            "winner": "Egypt"
+          },
+          {
+            "home": "Switzerland",
+            "away": "Algeria",
+            "played": true,
+            "home_score": 2,
+            "away_score": 0,
+            "winner": "Switzerland"
+          },
+          {
+            "home": "Colombia",
+            "away": "Ghana",
+            "played": true,
+            "home_score": 1,
+            "away_score": 0,
+            "winner": "Colombia"
           }
         ]
       },
@@ -864,64 +864,64 @@
         "round": "Round of 16",
         "ties": [
           {
-            "home": null,
-            "away": null,
+            "home": "Paraguay",
+            "away": "France",
+            "played": true,
+            "home_score": 0,
+            "away_score": 1,
+            "winner": "France"
+          },
+          {
+            "home": "Canada",
+            "away": "Morocco",
+            "played": true,
+            "home_score": 0,
+            "away_score": 3,
+            "winner": "Morocco"
+          },
+          {
+            "home": "Portugal",
+            "away": "Spain",
             "played": false,
             "home_score": null,
             "away_score": null,
             "winner": null
           },
           {
-            "home": null,
-            "away": null,
+            "home": "United States",
+            "away": "Belgium",
             "played": false,
             "home_score": null,
             "away_score": null,
             "winner": null
           },
           {
-            "home": null,
-            "away": null,
+            "home": "Brazil",
+            "away": "Norway",
+            "played": true,
+            "home_score": 1,
+            "away_score": 2,
+            "winner": "Norway"
+          },
+          {
+            "home": "Mexico",
+            "away": "England",
+            "played": true,
+            "home_score": 2,
+            "away_score": 3,
+            "winner": "England"
+          },
+          {
+            "home": "Argentina",
+            "away": "Egypt",
             "played": false,
             "home_score": null,
             "away_score": null,
             "winner": null
           },
           {
-            "home": null,
-            "away": null,
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
-          },
-          {
-            "home": null,
-            "away": null,
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
-          },
-          {
-            "home": null,
-            "away": null,
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
-          },
-          {
-            "home": null,
-            "away": null,
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
-          },
-          {
-            "home": null,
-            "away": "Canada",
+            "home": "Switzerland",
+            "away": "Colombia",
             "played": false,
             "home_score": null,
             "away_score": null,
@@ -933,8 +933,8 @@
         "round": "Quarter-finals",
         "ties": [
           {
-            "home": null,
-            "away": null,
+            "home": "France",
+            "away": "Morocco",
             "played": false,
             "home_score": null,
             "away_score": null,
@@ -949,8 +949,8 @@
             "winner": null
           },
           {
-            "home": null,
-            "away": null,
+            "home": "Norway",
+            "away": "England",
             "played": false,
             "home_score": null,
             "away_score": null,

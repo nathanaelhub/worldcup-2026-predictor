@@ -52,7 +52,10 @@ def main() -> None:
 
     local_path = ROOT / "static" / "data" / "odds_history.json"
     local = json.loads(local_path.read_text()) if local_path.exists() else []
-    history = merge(local, fetch_live(), [snapshot(sim)])
+    # committed history beats the live site's on a date collision — the repo
+    # is where corrections land (e.g. entries recomputed after a bracket fix);
+    # the live copy only contributes days accumulated since the last commit
+    history = merge(fetch_live(), local, [snapshot(sim)])
 
     out = json.dumps(history, indent=1)
     (ROOT / "models" / "odds_history.json").write_text(out)

@@ -1,0 +1,157 @@
+{
+ "note": "Knockout results confirmed from official sources (FIFA match reports via the Wikipedia knockout-stage page) that haven't landed in the martj42 dataset yet. The dataset stays authoritative: an override is ignored as soon as the same fixture appears upstream. Scores are after extra time where applicable; shootout_winner set when decided on penalties. Each entry carries the real match date so artifacts can be stamped with how current their results are. Prune entries once upstream catches up.",
+ "results": [
+  {
+   "home": "Germany",
+   "away": "Paraguay",
+   "home_score": 1,
+   "away_score": 1,
+   "shootout_winner": "Paraguay",
+   "date": "2026-06-29"
+  },
+  {
+   "home": "France",
+   "away": "Sweden",
+   "home_score": 3,
+   "away_score": 0,
+   "shootout_winner": null,
+   "date": "2026-06-30"
+  },
+  {
+   "home": "Netherlands",
+   "away": "Morocco",
+   "home_score": 1,
+   "away_score": 1,
+   "shootout_winner": "Morocco",
+   "date": "2026-06-29"
+  },
+  {
+   "home": "Portugal",
+   "away": "Croatia",
+   "home_score": 2,
+   "away_score": 1,
+   "shootout_winner": null,
+   "date": "2026-07-02"
+  },
+  {
+   "home": "Spain",
+   "away": "Austria",
+   "home_score": 3,
+   "away_score": 0,
+   "shootout_winner": null,
+   "date": "2026-07-02"
+  },
+  {
+   "home": "United States",
+   "away": "Bosnia and Herzegovina",
+   "home_score": 2,
+   "away_score": 0,
+   "shootout_winner": null,
+   "date": "2026-07-01"
+  },
+  {
+   "home": "Belgium",
+   "away": "Senegal",
+   "home_score": 3,
+   "away_score": 2,
+   "shootout_winner": null,
+   "date": "2026-07-01"
+  },
+  {
+   "home": "Brazil",
+   "away": "Japan",
+   "home_score": 2,
+   "away_score": 1,
+   "shootout_winner": null,
+   "date": "2026-06-29"
+  },
+  {
+   "home": "Ivory Coast",
+   "away": "Norway",
+   "home_score": 1,
+   "away_score": 2,
+   "shootout_winner": null,
+   "date": "2026-06-30"
+  },
+  {
+   "home": "Mexico",
+   "away": "Ecuador",
+   "home_score": 2,
+   "away_score": 0,
+   "shootout_winner": null,
+   "date": "2026-06-30"
+  },
+  {
+   "home": "England",
+   "away": "DR Congo",
+   "home_score": 2,
+   "away_score": 1,
+   "shootout_winner": null,
+   "date": "2026-07-01"
+  },
+  {
+   "home": "Argentina",
+   "away": "Cape Verde",
+   "home_score": 3,
+   "away_score": 2,
+   "shootout_winner": null,
+   "date": "2026-07-03"
+  },
+  {
+   "home": "Australia",
+   "away": "Egypt",
+   "home_score": 1,
+   "away_score": 1,
+   "shootout_winner": "Egypt",
+   "date": "2026-07-03"
+  },
+  {
+   "home": "Switzerland",
+   "away": "Algeria",
+   "home_score": 2,
+   "away_score": 0,
+   "shootout_winner": null,
+   "date": "2026-07-02"
+  },
+  {
+   "home": "Colombia",
+   "away": "Ghana",
+   "home_score": 1,
+   "away_score": 0,
+   "shootout_winner": null,
+   "date": "2026-07-03"
+  },
+  {
+   "home": "Paraguay",
+   "away": "France",
+   "home_score": 0,
+   "away_score": 1,
+   "shootout_winner": null,
+   "date": "2026-07-04"
+  },
+  {
+   "home": "Canada",
+   "away": "Morocco",
+   "home_score": 0,
+   "away_score": 3,
+   "shootout_winner": null,
+   "date": "2026-07-04"
+  },
+  {
+   "home": "Brazil",
+   "away": "Norway",
+   "home_score": 1,
+   "away_score": 2,
+   "shootout_winner": null,
+   "date": "2026-07-05"
+  },
+  {
+   "home": "Mexico",
+   "away": "England",
+   "home_score": 2,
+   "away_score": 3,
+   "shootout_winner": null,
+   "date": "2026-07-05"
+  }
+ ]
+}

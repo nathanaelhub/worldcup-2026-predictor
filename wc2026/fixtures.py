@@ -16,6 +16,7 @@ import pandas as pd
 
 WC = "FIFA World Cup"
 KO_PATH = Path(__file__).resolve().parent.parent / "data" / "knockout_r32.json"
+KO_OVERRIDES = Path(__file__).resolve().parent.parent / "data" / "knockout_overrides.json"
 KNOCKOUT_START = "2026-06-28"   # group stage ends 06-27; knockouts are cross-group
 
 
@@ -84,6 +85,19 @@ def recent_results(matches: pd.DataFrame, limit: int | None = None) -> list[dict
 ROUND_NAMES = ["Round of 32", "Round of 16", "Quarter-finals", "Semi-finals", "Final"]
 
 
+def _merge_overrides(results: dict) -> None:
+    """Fill in officially-confirmed knockout results the upstream dataset
+    doesn't have yet (data/knockout_overrides.json). The dataset always wins:
+    an override is only used when the fixture is absent upstream."""
+    if not KO_OVERRIDES.exists():
+        return
+    for o in json.loads(KO_OVERRIDES.read_text()).get("results", []):
+        key = frozenset((o["home"], o["away"]))
+        results.setdefault(key, {
+            o["home"]: int(o["home_score"]), o["away"]: int(o["away_score"]),
+            "so": o.get("shootout_winner")})
+
+
 def knockout_bracket(matches: pd.DataFrame) -> dict:
     """The real knockout bracket, cascading actual results from the dataset.
 
@@ -107,6 +121,7 @@ def knockout_bracket(matches: pd.DataFrame) -> dict:
         so = r.shootout_winner if isinstance(r.shootout_winner, str) else None
         results[frozenset((r.home_team, r.away_team))] = {
             r.home_team: int(r.home_score), r.away_team: int(r.away_score), "so": so}
+    _merge_overrides(results)
 
     def make_tie(home, away):
         res = results.get(frozenset((home, away))) if home and away else None
