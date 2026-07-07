@@ -22,7 +22,9 @@ redeploys **daily**, so the predictions stay current through the tournament.
 > **It works today.** The data pipeline, time-weighted Dixon-Coles model, backtest,
 > tournament Monte Carlo, and dashboard are all live. On the 48 group games played
 > so far it called **62.5% correctly out-of-sample**, beating both baselines on RPS.
-> Remaining quant roadmap (feature blend) in **[`docs/PLAN.md`](docs/PLAN.md)**.
+> A leakage-safe pre-match **feature layer** (`wc2026/features.py`) is built and
+> validated; the remaining roadmap item is blending a feature model into the
+> Dixon-Coles core (`model.py`) — see **[`docs/PLAN.md`](docs/PLAN.md)**.
 
 The model also simulates the remaining bracket **20,000 times** on every refit
 (`models/simulation.json`): each nation's chance of reaching every round and
@@ -110,7 +112,7 @@ worldcup-2026-predictor/
 │   ├── fixtures.py        # group reconstruction, upcoming + R32    [implemented]
 │   ├── backtest.py        # walk-forward RPS vs baselines          [implemented]
 │   ├── simulate.py        # tournament Monte Carlo (title odds)    [implemented]
-│   ├── features.py        # extra pre-match features               [roadmap]
+│   ├── features.py        # leakage-safe pre-match features        [implemented]
 │   └── model.py           # GBM feature blend                      [roadmap]
 ├── scripts/train.py       # fit + backtest + write models/*.json
 ├── models/                # committed artifacts so the app runs out of the box
