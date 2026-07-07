@@ -25,10 +25,11 @@ async function boot() {
     $("chips").innerHTML = `<div style="color:#9aa6be">Could not load model data.</div>`;
     return;
   }
-  // the simulation artifact arrived later than the rest — degrade gracefully
-  D.sim = await fetch("data/simulation.json")
-    .then((r) => { if (!r.ok) throw 0; return r.json(); })
-    .catch(() => null);
+  // the simulation + history artifacts arrived later than the rest — degrade gracefully
+  [D.sim, D.history] = await Promise.all([
+    fetch("data/simulation.json").then((r) => { if (!r.ok) throw 0; return r.json(); }).catch(() => null),
+    fetch("data/odds_history.json").then((r) => { if (!r.ok) throw 0; return r.json(); }).catch(() => null),
+  ]);
   LAB_TEAMS = Object.entries(D.elo)
     .filter(([n]) => window.WCFlags.hasFlag(n))
     .sort((a, b) => b[1] - a[1])
@@ -156,6 +157,75 @@ function renderBracket(mode, mountId) {
     </div></div>`;
 }
 
+// ---------- odds timeline (championship probability over the tournament) ----------
+function renderTimeline() {
+  const H = D.history;
+  if (!Array.isArray(H) || H.length < 2) return "";   // need two points for a trend
+  const toTs = (d) => { const [y, m, dd] = d.split("-").map(Number); return Date.UTC(y, m - 1, dd); };
+  const ts = H.map((e) => toTs(e.date));
+  const minT = ts[0], maxT = ts[ts.length - 1], spanT = (maxT - minT) || 1;
+
+  // teams to draw: the union of the top 6 at any snapshot (captures the risers
+  // and anyone who has since collapsed, e.g. an eliminated former contender)
+  const prom = new Set();
+  H.forEach((e) => Object.entries(e.champion).sort((a, b) => b[1] - a[1]).slice(0, 6).forEach(([t]) => prom.add(t)));
+  const latest = H[H.length - 1].champion;
+  const teams = [...prom].sort((a, b) => (latest[b] || 0) - (latest[a] || 0));
+
+  const yMax = Math.max(0.1, ...H.flatMap((e) => teams.map((t) => e.champion[t] || 0)));
+  const niceMax = Math.ceil(yMax / 0.05) * 0.05;
+
+  const W = 760, HH = 360, L = 44, R = 122, T = 18, B = 40;
+  const pw = W - L - R, ph = HH - T - B;
+  const X = (t) => L + (t - minT) / spanT * pw;
+  const Y = (p) => T + (1 - p / niceMax) * ph;
+  const PAL = ["#2ee6a6", "#f0b948", "#f0648b", "#60a5fa"];   // validated on the dark surface
+  const GRAY = "#5f6b85";
+  const shortDate = (iso) => { const [, m, dd] = iso.split("-").map(Number); return `${MONTHS[m - 1]} ${dd}`; };
+
+  let grid = "";
+  for (let g = 0; g <= niceMax + 1e-9; g += 0.05) {
+    const y = Y(g).toFixed(1);
+    grid += `<line x1="${L}" y1="${y}" x2="${L + pw}" y2="${y}" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>`
+          + `<text x="${L - 8}" y="${(+y + 3.5).toFixed(1)}" text-anchor="end" font-family="'IBM Plex Mono',monospace" font-size="9.5" fill="#5f6b85">${Math.round(g * 100)}%</text>`;
+  }
+  let xlab = "";
+  H.forEach((e, i) => {
+    xlab += `<text x="${X(ts[i]).toFixed(1)}" y="${HH - B + 20}" text-anchor="middle" font-family="'IBM Plex Mono',monospace" font-size="9.5" fill="#6e7892">${shortDate(e.date)}</text>`;
+  });
+
+  let paths = "", markers = "";
+  const ends = [];
+  teams.forEach((team, idx) => {
+    const colored = idx < 4;
+    const col = colored ? PAL[idx] : GRAY;
+    const pts = H.map((e, i) => [X(ts[i]), Y(e.champion[team] || 0)]);
+    const d = pts.map((p, i) => `${i ? "L" : "M"}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(" ");
+    paths += `<path d="${d}" fill="none" stroke="${col}" stroke-width="${colored ? 2 : 1.25}" stroke-opacity="${colored ? 1 : 0.5}" stroke-linejoin="round" stroke-linecap="round"/>`;
+    pts.forEach((p, i) => {
+      markers += `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="${colored ? 4 : 3}" fill="#070b15" stroke="${col}" stroke-width="${colored ? 2 : 1.25}" stroke-opacity="${colored ? 1 : 0.5}"><title>${team} — ${shortDate(H[i].date)}: ${((H[i].champion[team] || 0) * 100).toFixed(1)}%</title></circle>`;
+    });
+    ends.push({ team, y: pts[pts.length - 1][1], col, colored, v: latest[team] || 0 });
+  });
+
+  // spread right-edge labels apart so they never overlap
+  ends.sort((a, b) => a.y - b.y);
+  for (let i = 1; i < ends.length; i++)
+    if (ends[i].y - ends[i - 1].y < 13) ends[i].y = ends[i - 1].y + 13;
+  const overflow = ends.length ? ends[ends.length - 1].y - (T + ph) : 0;
+  if (overflow > 0) ends.forEach((e) => (e.y -= overflow));
+  const labels = ends.map((e) =>
+    `<text x="${L + pw + 8}" y="${(e.y + 3.5).toFixed(1)}" font-family="'Inter',sans-serif" font-size="${e.colored ? 11 : 10}" font-weight="${e.colored ? 600 : 400}" fill="${e.colored ? e.col : "#7e89a3"}">${e.team} ${(e.v * 100).toFixed(0)}%</text>`).join("");
+
+  return `
+    <div style="margin-bottom:26px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.12em; color:#6e7892; margin-bottom:10px;">CHAMPIONSHIP PROBABILITY · EACH REFIT</div>
+      <div style="overflow-x:auto;"><svg viewBox="0 0 ${W} ${HH}" style="width:100%; min-width:560px; height:auto; display:block;" role="img" aria-label="Line chart of each contender's championship probability across nightly refits; full values are in the table below.">
+        ${grid}${paths}${markers}${xlab}${labels}
+      </svg></div>
+    </div>`;
+}
+
 // ---------- title odds (Monte Carlo) ----------
 function renderOdds() {
   const mount = $("panel-odds");
@@ -183,6 +253,7 @@ function renderOdds() {
       <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#6e7892;">${D.sim.n_sims.toLocaleString()} simulated tournaments · refit nightly</span>
     </div>
     <p style="color:#7e89a3; font-size:12px; margin:0 0 16px; line-height:1.5; max-width:720px;">Monte Carlo of the remaining bracket: every unplayed tie is sampled from the Dixon-Coles score matrix (extra time, then penalties), real results are locked in. Each column is the share of simulations where the nation reaches that round.</p>
+    ${renderTimeline()}
     <div style="overflow-x:auto;"><div style="min-width:660px; border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.08);">
       <div style="display:grid; grid-template-columns:${cols}; gap:12px; padding:11px 16px; background:rgba(255,255,255,0.035); font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:0.1em; color:#6e7892;">
         <span>NATION</span><span>CHAMPION&nbsp;%</span><span style="text-align:right;">FINAL</span><span style="text-align:right;">SEMIS</span><span style="text-align:right;">QTRS</span><span style="text-align:right;">R16</span>
