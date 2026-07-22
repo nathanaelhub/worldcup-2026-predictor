@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-06-28",
+  "as_of": "2026-07-19",
   "groups": {
     "A": [
       "Algeria",
@@ -882,18 +882,18 @@
           {
             "home": "Portugal",
             "away": "Spain",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
+            "played": true,
+            "home_score": 0,
+            "away_score": 1,
+            "winner": "Spain"
           },
           {
             "home": "United States",
             "away": "Belgium",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
+            "played": true,
+            "home_score": 1,
+            "away_score": 4,
+            "winner": "Belgium"
           },
           {
             "home": "Brazil",
@@ -914,18 +914,18 @@
           {
             "home": "Argentina",
             "away": "Egypt",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
+            "played": true,
+            "home_score": 3,
+            "away_score": 2,
+            "winner": "Argentina"
           },
           {
             "home": "Switzerland",
             "away": "Colombia",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
+            "played": true,
+            "home_score": 0,
+            "away_score": 0,
+            "winner": "Switzerland"
           }
         ]
       },
@@ -935,34 +935,34 @@
           {
             "home": "France",
             "away": "Morocco",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
+            "played": true,
+            "home_score": 2,
+            "away_score": 0,
+            "winner": "France"
           },
           {
-            "home": null,
-            "away": null,
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
+            "home": "Spain",
+            "away": "Belgium",
+            "played": true,
+            "home_score": 2,
+            "away_score": 1,
+            "winner": "Spain"
           },
           {
             "home": "Norway",
             "away": "England",
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
+            "played": true,
+            "home_score": 1,
+            "away_score": 2,
+            "winner": "England"
           },
           {
-            "home": null,
-            "away": null,
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
+            "home": "Argentina",
+            "away": "Switzerland",
+            "played": true,
+            "home_score": 3,
+            "away_score": 1,
+            "winner": "Argentina"
           }
         ]
       },
@@ -970,20 +970,20 @@
         "round": "Semi-finals",
         "ties": [
           {
-            "home": null,
-            "away": null,
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
+            "home": "France",
+            "away": "Spain",
+            "played": true,
+            "home_score": 0,
+            "away_score": 2,
+            "winner": "Spain"
           },
           {
-            "home": null,
-            "away": null,
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
+            "home": "England",
+            "away": "Argentina",
+            "played": true,
+            "home_score": 1,
+            "away_score": 2,
+            "winner": "Argentina"
           }
         ]
       },
@@ -991,12 +991,12 @@
         "round": "Final",
         "ties": [
           {
-            "home": null,
-            "away": null,
-            "played": false,
-            "home_score": null,
-            "away_score": null,
-            "winner": null
+            "home": "Spain",
+            "away": "Argentina",
+            "played": true,
+            "home_score": 1,
+            "away_score": 0,
+            "winner": "Spain"
           }
         ]
       }
