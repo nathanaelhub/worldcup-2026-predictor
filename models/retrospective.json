@@ -1,0 +1,694 @@
+{
+  "champion": "Spain",
+  "runner_up": "Argentina",
+  "final_score": "Spain 1-0 Argentina",
+  "final_date": "2026-07-19",
+  "knockout_backtest": {
+    "summary": {
+      "matches": 31,
+      "rps_model": 0.153,
+      "rps_elo": 0.1632,
+      "rps_naive": 0.2423,
+      "outcome_accuracy": 0.839
+    },
+    "per_match": [
+      {
+        "date": "2026-06-28",
+        "home": "South Africa",
+        "away": "Canada",
+        "home_score": 0,
+        "away_score": 1,
+        "shootout_winner": null,
+        "outcome": "A",
+        "model_probs": [
+          0.2005,
+          0.3127,
+          0.4868
+        ],
+        "rps_model": 0.1518,
+        "rps_elo": 0.1557,
+        "rps_naive": 0.3773,
+        "hit": 1
+      },
+      {
+        "date": "2026-06-29",
+        "home": "Germany",
+        "away": "Paraguay",
+        "home_score": 1,
+        "away_score": 1,
+        "shootout_winner": "Paraguay",
+        "outcome": "D",
+        "model_probs": [
+          0.5707,
+          0.2482,
+          0.1811
+        ],
+        "rps_model": 0.1792,
+        "rps_elo": 0.1419,
+        "rps_naive": 0.16,
+        "hit": 0
+      },
+      {
+        "date": "2026-06-29",
+        "home": "Netherlands",
+        "away": "Morocco",
+        "home_score": 1,
+        "away_score": 1,
+        "shootout_winner": "Morocco",
+        "outcome": "D",
+        "model_probs": [
+          0.3508,
+          0.3184,
+          0.3308
+        ],
+        "rps_model": 0.1162,
+        "rps_elo": 0.1315,
+        "rps_naive": 0.16,
+        "hit": 0
+      },
+      {
+        "date": "2026-06-29",
+        "home": "Brazil",
+        "away": "Japan",
+        "home_score": 2,
+        "away_score": 1,
+        "shootout_winner": null,
+        "outcome": "H",
+        "model_probs": [
+          0.4822,
+          0.2761,
+          0.2417
+        ],
+        "rps_model": 0.1633,
+        "rps_elo": 0.1965,
+        "rps_naive": 0.17,
+        "hit": 1
+      },
+      {
+        "date": "2026-06-30",
+        "home": "France",
+        "away": "Sweden",
+        "home_score": 3,
+        "away_score": 0,
+        "shootout_winner": null,
+        "outcome": "H",
+        "model_probs": [
+          0.6839,
+          0.183,
+          0.1331
+        ],
+        "rps_model": 0.0588,
+        "rps_elo": 0.0645,
+        "rps_naive": 0.17,
+        "hit": 1
+      },
+      {
+        "date": "2026-06-30",
+        "home": "Ivory Coast",
+        "away": "Norway",
+        "home_score": 1,
+        "away_score": 2,
+        "shootout_winner": null,
+        "outcome": "A",
+        "model_probs": [
+          0.2592,
+          0.2862,
+          0.4547
+        ],
+        "rps_model": 0.1823,
+        "rps_elo": 0.1976,
+        "rps_naive": 0.3773,
+        "hit": 1
+      },
+      {
+        "date": "2026-06-30",
+        "home": "Mexico",
+        "away": "Ecuador",
+        "home_score": 2,
+        "away_score": 0,
+        "shootout_winner": null,
+        "outcome": "H",
+        "model_probs": [
+          0.3229,
+          0.3569,
+          0.3202
+        ],
+        "rps_model": 0.2805,
+        "rps_elo": 0.191,
+        "rps_naive": 0.17,
+        "hit": 0
+      },
+      {
+        "date": "2026-07-01",
+        "home": "United States",
+        "away": "Bosnia and Herzegovina",
+        "home_score": 2,
+        "away_score": 0,
+        "shootout_winner": null,
+        "outcome": "H",
+        "model_probs": [
+          0.6166,
+          0.2171,
+          0.1663
+        ],
+        "rps_model": 0.0873,
+        "rps_elo": 0.0997,
+        "rps_naive": 0.17,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-01",
+        "home": "Belgium",
+        "away": "Senegal",
+        "home_score": 3,
+        "away_score": 2,
+        "shootout_winner": null,
+        "outcome": "H",
+        "model_probs": [
+          0.4798,
+          0.2715,
+          0.2486
+        ],
+        "rps_model": 0.1662,
+        "rps_elo": 0.2053,
+        "rps_naive": 0.17,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-01",
+        "home": "England",
+        "away": "DR Congo",
+        "home_score": 2,
+        "away_score": 1,
+        "shootout_winner": null,
+        "outcome": "H",
+        "model_probs": [
+          0.609,
+          0.2819,
+          0.1091
+        ],
+        "rps_model": 0.0824,
+        "rps_elo": 0.0924,
+        "rps_naive": 0.17,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-02",
+        "home": "Portugal",
+        "away": "Croatia",
+        "home_score": 2,
+        "away_score": 1,
+        "shootout_winner": null,
+        "outcome": "H",
+        "model_probs": [
+          0.5253,
+          0.2586,
+          0.2161
+        ],
+        "rps_model": 0.136,
+        "rps_elo": 0.2055,
+        "rps_naive": 0.17,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-02",
+        "home": "Spain",
+        "away": "Austria",
+        "home_score": 3,
+        "away_score": 0,
+        "shootout_winner": null,
+        "outcome": "H",
+        "model_probs": [
+          0.6178,
+          0.2325,
+          0.1497
+        ],
+        "rps_model": 0.0842,
+        "rps_elo": 0.0963,
+        "rps_naive": 0.17,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-02",
+        "home": "Switzerland",
+        "away": "Algeria",
+        "home_score": 2,
+        "away_score": 0,
+        "shootout_winner": null,
+        "outcome": "H",
+        "model_probs": [
+          0.4495,
+          0.2621,
+          0.2884
+        ],
+        "rps_model": 0.1931,
+        "rps_elo": 0.2006,
+        "rps_naive": 0.17,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-03",
+        "home": "Colombia",
+        "away": "Ghana",
+        "home_score": 1,
+        "away_score": 0,
+        "shootout_winner": null,
+        "outcome": "H",
+        "model_probs": [
+          0.7263,
+          0.1916,
+          0.0822
+        ],
+        "rps_model": 0.0408,
+        "rps_elo": 0.0531,
+        "rps_naive": 0.17,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-03",
+        "home": "Argentina",
+        "away": "Cape Verde",
+        "home_score": 3,
+        "away_score": 2,
+        "shootout_winner": null,
+        "outcome": "H",
+        "model_probs": [
+          0.8225,
+          0.1438,
+          0.0338
+        ],
+        "rps_model": 0.0163,
+        "rps_elo": 0.0224,
+        "rps_naive": 0.17,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-03",
+        "home": "Australia",
+        "away": "Egypt",
+        "home_score": 1,
+        "away_score": 1,
+        "shootout_winner": "Egypt",
+        "outcome": "D",
+        "model_probs": [
+          0.3526,
+          0.3567,
+          0.2907
+        ],
+        "rps_model": 0.1044,
+        "rps_elo": 0.1327,
+        "rps_naive": 0.16,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-04",
+        "home": "Paraguay",
+        "away": "France",
+        "home_score": 0,
+        "away_score": 1,
+        "shootout_winner": null,
+        "outcome": "A",
+        "model_probs": [
+          0.1372,
+          0.2537,
+          0.6091
+        ],
+        "rps_model": 0.0858,
+        "rps_elo": 0.0893,
+        "rps_naive": 0.3773,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-04",
+        "home": "Canada",
+        "away": "Morocco",
+        "home_score": 0,
+        "away_score": 3,
+        "shootout_winner": null,
+        "outcome": "A",
+        "model_probs": [
+          0.1925,
+          0.342,
+          0.4655
+        ],
+        "rps_model": 0.1614,
+        "rps_elo": 0.1576,
+        "rps_naive": 0.3773,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-05",
+        "home": "Brazil",
+        "away": "Norway",
+        "home_score": 1,
+        "away_score": 2,
+        "shootout_winner": null,
+        "outcome": "A",
+        "model_probs": [
+          0.5595,
+          0.2276,
+          0.213
+        ],
+        "rps_model": 0.4663,
+        "rps_elo": 0.3822,
+        "rps_naive": 0.3773,
+        "hit": 0
+      },
+      {
+        "date": "2026-07-05",
+        "home": "Mexico",
+        "away": "England",
+        "home_score": 2,
+        "away_score": 3,
+        "shootout_winner": null,
+        "outcome": "A",
+        "model_probs": [
+          0.2281,
+          0.2943,
+          0.4776
+        ],
+        "rps_model": 0.1625,
+        "rps_elo": 0.2939,
+        "rps_naive": 0.3773,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-06",
+        "home": "Portugal",
+        "away": "Spain",
+        "home_score": 0,
+        "away_score": 1,
+        "shootout_winner": null,
+        "outcome": "A",
+        "model_probs": [
+          0.2763,
+          0.2796,
+          0.4441
+        ],
+        "rps_model": 0.1927,
+        "rps_elo": 0.1635,
+        "rps_naive": 0.3773,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-06",
+        "home": "United States",
+        "away": "Belgium",
+        "home_score": 1,
+        "away_score": 4,
+        "shootout_winner": null,
+        "outcome": "A",
+        "model_probs": [
+          0.2213,
+          0.2255,
+          0.5532
+        ],
+        "rps_model": 0.1243,
+        "rps_elo": 0.25,
+        "rps_naive": 0.3773,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-07",
+        "home": "Switzerland",
+        "away": "Colombia",
+        "home_score": 0,
+        "away_score": 0,
+        "shootout_winner": "Switzerland",
+        "outcome": "D",
+        "model_probs": [
+          0.28,
+          0.2788,
+          0.4412
+        ],
+        "rps_model": 0.1365,
+        "rps_elo": 0.1334,
+        "rps_naive": 0.16,
+        "hit": 0
+      },
+      {
+        "date": "2026-07-07",
+        "home": "Argentina",
+        "away": "Egypt",
+        "home_score": 3,
+        "away_score": 2,
+        "shootout_winner": null,
+        "outcome": "H",
+        "model_probs": [
+          0.6479,
+          0.2559,
+          0.0961
+        ],
+        "rps_model": 0.0666,
+        "rps_elo": 0.0566,
+        "rps_naive": 0.17,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-09",
+        "home": "France",
+        "away": "Morocco",
+        "home_score": 2,
+        "away_score": 0,
+        "shootout_winner": null,
+        "outcome": "H",
+        "model_probs": [
+          0.3924,
+          0.3358,
+          0.2718
+        ],
+        "rps_model": 0.2215,
+        "rps_elo": 0.166,
+        "rps_naive": 0.17,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-10",
+        "home": "Spain",
+        "away": "Belgium",
+        "home_score": 2,
+        "away_score": 1,
+        "shootout_winner": null,
+        "outcome": "H",
+        "model_probs": [
+          0.5279,
+          0.2559,
+          0.2162
+        ],
+        "rps_model": 0.1348,
+        "rps_elo": 0.146,
+        "rps_naive": 0.17,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-11",
+        "home": "Norway",
+        "away": "England",
+        "home_score": 1,
+        "away_score": 2,
+        "shootout_winner": null,
+        "outcome": "A",
+        "model_probs": [
+          0.2345,
+          0.2612,
+          0.5043
+        ],
+        "rps_model": 0.1504,
+        "rps_elo": 0.1982,
+        "rps_naive": 0.3773,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-11",
+        "home": "Argentina",
+        "away": "Switzerland",
+        "home_score": 3,
+        "away_score": 1,
+        "shootout_winner": null,
+        "outcome": "H",
+        "model_probs": [
+          0.5407,
+          0.2718,
+          0.1875
+        ],
+        "rps_model": 0.1231,
+        "rps_elo": 0.1323,
+        "rps_naive": 0.17,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-14",
+        "home": "France",
+        "away": "Spain",
+        "home_score": 0,
+        "away_score": 2,
+        "shootout_winner": null,
+        "outcome": "A",
+        "model_probs": [
+          0.2881,
+          0.2868,
+          0.4251
+        ],
+        "rps_model": 0.2068,
+        "rps_elo": 0.2532,
+        "rps_naive": 0.3773,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-15",
+        "home": "England",
+        "away": "Argentina",
+        "home_score": 1,
+        "away_score": 2,
+        "shootout_winner": null,
+        "outcome": "A",
+        "model_probs": [
+          0.2751,
+          0.321,
+          0.4039
+        ],
+        "rps_model": 0.2155,
+        "rps_elo": 0.1881,
+        "rps_naive": 0.3773,
+        "hit": 1
+      },
+      {
+        "date": "2026-07-19",
+        "home": "Spain",
+        "away": "Argentina",
+        "home_score": 1,
+        "away_score": 0,
+        "shootout_winner": null,
+        "outcome": "H",
+        "model_probs": [
+          0.3653,
+          0.3154,
+          0.3193
+        ],
+        "rps_model": 0.2524,
+        "rps_elo": 0.2629,
+        "rps_naive": 0.17,
+        "hit": 1
+      }
+    ]
+  },
+  "favourite_trajectory": {
+    "pre_knockout_favourite": "Argentina",
+    "pre_knockout_favourite_prob": 0.2323,
+    "pre_knockout_favourite_was_champion": false,
+    "refits_favouring_champion": 8,
+    "refits_total": 12,
+    "trajectory": [
+      {
+        "date": "2026-06-28",
+        "favourite": "Argentina",
+        "favourite_prob": 0.2323,
+        "champion_correct": false,
+        "champion_prob": 0.1324,
+        "runner_up_prob": 0.2323
+      },
+      {
+        "date": "2026-07-04",
+        "favourite": "Argentina",
+        "favourite_prob": 0.2271,
+        "champion_correct": false,
+        "champion_prob": 0.1348,
+        "runner_up_prob": 0.2271
+      },
+      {
+        "date": "2026-07-05",
+        "favourite": "Argentina",
+        "favourite_prob": 0.2346,
+        "champion_correct": false,
+        "champion_prob": 0.1427,
+        "runner_up_prob": 0.2346
+      },
+      {
+        "date": "2026-07-06",
+        "favourite": "Spain",
+        "favourite_prob": 0.2482,
+        "champion_correct": true,
+        "champion_prob": 0.2482,
+        "runner_up_prob": 0.1986
+      },
+      {
+        "date": "2026-07-07",
+        "favourite": "Spain",
+        "favourite_prob": 0.2471,
+        "champion_correct": true,
+        "champion_prob": 0.2471,
+        "runner_up_prob": 0.2443
+      },
+      {
+        "date": "2026-07-09",
+        "favourite": "France",
+        "favourite_prob": 0.2536,
+        "champion_correct": false,
+        "champion_prob": 0.2312,
+        "runner_up_prob": 0.2346
+      },
+      {
+        "date": "2026-07-10",
+        "favourite": "Spain",
+        "favourite_prob": 0.3495,
+        "champion_correct": true,
+        "champion_prob": 0.3495,
+        "runner_up_prob": 0.2245
+      },
+      {
+        "date": "2026-07-11",
+        "favourite": "Spain",
+        "favourite_prob": 0.3187,
+        "champion_correct": true,
+        "champion_prob": 0.3187,
+        "runner_up_prob": 0.3036
+      },
+      {
+        "date": "2026-07-14",
+        "favourite": "Spain",
+        "favourite_prob": 0.5609,
+        "champion_correct": true,
+        "champion_prob": 0.5609,
+        "runner_up_prob": 0.2714
+      },
+      {
+        "date": "2026-07-15",
+        "favourite": "Spain",
+        "favourite_prob": 0.5207,
+        "champion_correct": true,
+        "champion_prob": 0.5207,
+        "runner_up_prob": 0.4793
+      },
+      {
+        "date": "2026-07-18",
+        "favourite": "Spain",
+        "favourite_prob": 0.5202,
+        "champion_correct": true,
+        "champion_prob": 0.5202,
+        "runner_up_prob": 0.4798
+      },
+      {
+        "date": "2026-07-19",
+        "favourite": "Spain",
+        "favourite_prob": 1.0,
+        "champion_correct": true,
+        "champion_prob": 1.0,
+        "runner_up_prob": 0.0
+      }
+    ]
+  },
+  "group_stage_backtest": {
+    "matches": 72,
+    "rps_model": 0.1488,
+    "rps_elo": 0.1678,
+    "rps_naive": 0.2219,
+    "outcome_accuracy": 0.639
+  },
+  "combined_out_of_sample_record": {
+    "matches": 103,
+    "rps_model": 0.1501,
+    "rps_elo": 0.1664,
+    "rps_naive": 0.228,
+    "outcome_accuracy": 0.699
+  }
+}

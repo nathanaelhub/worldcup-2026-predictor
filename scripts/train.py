@@ -85,7 +85,7 @@ def main() -> None:
     print("Backtesting (each window refits on prior data — a few minutes)…")
     windows = [
         {"name": "World Cup 2022", "start": "2022-11-20", "end": "2022-12-18", "tournament": "FIFA World Cup"},
-        {"name": "World Cup 2026 (group stage so far)", "start": WC2026_START, "tournament": "FIFA World Cup"},
+        {"name": "World Cup 2026 (group stage)", "start": WC2026_START, "end": "2026-06-27", "tournament": "FIFA World Cup"},
     ]
     report = evaluate_tournaments(matches, windows)
 
