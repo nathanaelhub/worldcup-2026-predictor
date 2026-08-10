@@ -4,27 +4,31 @@
 
 ![World Cup 2026 Predictor dashboard](docs/img/dashboard.png)
 
-> The hero accuracy tracks the latest settled games and refits daily, so it may
-> read higher than the fixed group-stage backtest table below.
+> **The tournament is over.** Spain beat Argentina 1-0 in the final on July 19,
+> 2026. See **[Post-tournament retrospective](#post-tournament-retrospective)**
+> for the honest final numbers — the sections below describe the system as it
+> ran *during* the tournament.
 
 A quant-style match predictor for the 2026 FIFA World Cup. It outputs **win /
 draw / loss probabilities and a full score distribution** for any fixture, is
 scored with a **proper scoring rule** (Ranked Probability Score), and is
-benchmarked against an Elo model and the naive base rate. The dashboard predicts
-the **upcoming group-stage fixtures** and keeps an honest, **out-of-sample track
-record** against the games already played.
+benchmarked against an Elo model and the naive base rate. Through the
+tournament, the dashboard predicted the upcoming group-stage fixtures and kept
+an honest, **out-of-sample track record** against the games already played.
 
 The hosted dashboard is **fully static** — the Dixon-Coles model is just a table
 of coefficients, so prediction runs entirely in your browser (`static/js/model.js`,
-a faithful port of the Python model). A GitHub Action refits on fresh data and
-redeploys **daily**, so the predictions stay current through the tournament.
+a faithful port of the Python model). A GitHub Action refit on fresh data and
+redeployed **daily** through the tournament, so the predictions stayed current.
 
-> **It works today.** The data pipeline, time-weighted Dixon-Coles model, backtest,
-> tournament Monte Carlo, and dashboard are all live. On the 48 group games played
-> so far it called **62.5% correctly out-of-sample**, beating both baselines on RPS.
-> A leakage-safe pre-match **feature layer** (`wc2026/features.py`) is built and
-> validated; the remaining roadmap item is blending a feature model into the
-> Dixon-Coles core (`model.py`) — see **[`docs/PLAN.md`](docs/PLAN.md)**.
+> **It worked.** The data pipeline, time-weighted Dixon-Coles model, backtest,
+> tournament Monte Carlo, and dashboard all ran end to end through a full World
+> Cup. Final out-of-sample record: **103 matches, RPS 0.150 vs Elo's 0.166 and
+> a naive base rate's 0.228, 70% outcome accuracy** — beating both baselines in
+> every phase (group stage and knockouts). A leakage-safe pre-match **feature
+> layer** (`wc2026/features.py`) was built and validated; blending a feature
+> model into the Dixon-Coles core (`model.py`) never shipped — see
+> **[`docs/PLAN.md`](docs/PLAN.md)**.
 
 The model also simulates the remaining bracket **20,000 times** on every refit
 (`models/simulation.json`): each nation's chance of reaching every round and
@@ -53,11 +57,15 @@ Each window refits using only matches *before* the tournament, then predicts it.
 | Tournament | Matches | Model | Elo | Naive | Outcome acc |
 |---|---|:---:|:---:|:---:|:---:|
 | World Cup 2022 | 64 | **0.214** | 0.216 | 0.236 | 53% |
-| World Cup 2026 (group stage so far) | 48 | **0.155** | 0.173 | 0.206 | **62%** |
-| **Pooled** | 112 | **0.189** | 0.197 | 0.223 | 57% |
+| World Cup 2026 (group stage) | 72 | **0.149** | 0.168 | 0.222 | **64%** |
+| **Pooled** | 136 | **0.180** | 0.190 | 0.228 | 59% |
 
 The model beats both baselines on RPS in every window. (Numbers regenerate into
-`models/metrics.json` whenever you retrain.)
+`models/metrics.json` whenever you retrain.) This table is the **group-stage**
+backtest only, using a single pre-tournament fit — see the
+**[post-tournament retrospective](#post-tournament-retrospective)** below for
+the knockout-stage numbers (a stricter, per-round walk-forward) and the full
+tournament's combined record.
 
 ## Stack
 
@@ -115,11 +123,37 @@ worldcup-2026-predictor/
 │   ├── features.py        # leakage-safe pre-match features        [implemented]
 │   └── model.py           # GBM feature blend                      [roadmap]
 ├── scripts/train.py       # fit + backtest + write models/*.json
+├── scripts/retrospective.py # post-tournament knockout backtest + odds trajectory
 ├── models/                # committed artifacts so the app runs out of the box
 ├── static/                # vanilla-JS dashboard
 ├── docs/PLAN.md           # full quant strategy
+├── docs/RETROSPECTIVE.md  # post-tournament writeup (full detail)
 └── render.yaml
 ```
+
+## Post-tournament retrospective
+
+**Spain won the 2026 World Cup**, beating Argentina 1-0 in the final on July
+19. Full writeup with a chart and the day-by-day title-odds table:
+**[`docs/RETROSPECTIVE.md`](docs/RETROSPECTIVE.md)**. The short version:
+
+- **Out-of-sample record, whole tournament:** 103 matches (72 group-stage +
+  31 knockout, walk-forward per round), **RPS 0.150 (model) vs 0.166 (Elo) vs
+  0.228 (naive)**, **70% outcome accuracy**. The model beat both baselines in
+  every phase.
+- **The favourite didn't win — at first.** Going into the knockouts the
+  model's title favourite was Argentina (23.2%), not the eventual champion
+  Spain (13.2%, second place). Argentina reached the final and lost. But from
+  the Round of 16 on, the day-by-day refits favoured Spain in 8 of 12
+  snapshots — and in every one from the quarter-finals onward except a single
+  one-day blip for France.
+- **Calibration:** Spain's simulated title probability sat at a flat ~13-14%
+  for three-quarters of the tournament, then climbed through the knockouts to
+  **52% on the eve of the final** (Argentina: 48%) — a genuine coin-flip read
+  for a match that was, in fact, decided by one goal. Reasonable at the sharp
+  end; a 13% number that turns out to be the winner is exactly what "13%"
+  should mean, not a miscalibration.
+- Reproduce it: `python scripts/train.py && python scripts/retrospective.py`.
 
 ## Honesty notes
 
